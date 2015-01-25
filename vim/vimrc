@@ -1,0 +1,188 @@
+" ##### Plugin stuff
+let g:pathogen_disabled = ['vim-pyunit']
+call pathogen#infect()
+call pathogen#helptags()
+
+autocmd BufWritePost *.py call Flake8()
+
+let g:flake8_show_in_gutter=1
+let g:flake8_show_in_file=1
+
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+
+
+set nocompatible
+
+" Shhh
+set visualbell
+set noerrorbells
+
+" Sets how many lines of history VIM has to remember
+set history=700
+
+" Enable filetype plugins
+filetype plugin on
+filetype indent on
+
+" for vim-latex
+set grepprg=grep\ -nH\ $*
+
+" Mmm love that tex flavor
+let g:tex_flavor='latex'
+
+" Set 10 lines to the cursor - when moving vertically using j/k
+set so=20
+
+" Turn on the WiLd menu (vim cmd auto-complete w/ tab)
+set wildmenu
+
+" Ignore compiled files
+set wildignore=*.o,*~,*.pyc
+
+" Always show current position
+set ruler
+
+" Set line num
+set number
+
+" Height of the command bar
+set cmdheight=2
+
+" Buffers can be hidden (not have to explicitly write, etc...)
+set hidden
+
+" Ignore case when searching
+set ignorecase
+" all lower -> insensitive, any upper -> sensitive
+set smartcase
+
+" Highlight search results
+set hlsearch
+
+" Makes search act like search in modern browsers
+set incsearch
+
+" ##### Color
+set t_Co=256
+
+syntax enable
+
+set background=dark
+colorscheme jellybeans
+" Allows transparent background
+hi Normal ctermbg=none
+
+
+" Be careful, and you can avoid this backup annoyingness
+set nobackup
+set nowb
+set noswapfile
+
+" Show matching brackets
+set showmatch
+set mat=2 " tenths of seconds
+
+" Format the status line
+set laststatus=2
+set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ Col:\ %c
+
+" ##### Tab behavior
+" Use spaces instead of tabs
+set expandtab
+" 1 tab == 4 spaces
+set shiftwidth=4 
+set softtabstop=4
+set autoindent " Basic auto-indent
+
+" ##### Wrapping
+set wrap 
+set linebreak "Only at linebreak
+set nolist  " list disables linebreak
+set textwidth=0
+set wrapmargin=0
+
+" Configure backspace so it acts as it should act
+set backspace=eol,start,indent
+" And commands can wrap
+set whichwrap+=<,>,h,l
+
+" ##### Programming specific...
+" Delete trailing white space on save
+func! DeleteTrailingWS()
+  exe "normal mz"
+  %s/\s\+$//ge
+  exe "normal `z"
+endfunc
+autocmd BufWrite *.py :call DeleteTrailingWS()
+
+set foldmethod=indent
+
+
+" ##### Key binds etc...
+let mapleader=","
+let g:mapleader = "," " Global?
+
+" Search, backward search
+map <space> /
+map <c-space> ?
+set pastetoggle=<F2>
+
+" Ctrl movement keys moves around splits
+map <c-l> <c-w>l
+map <c-h> <c-w>h
+map <c-j> <c-w>j
+map <c-k> <c-w>k
+
+" Disable arrows, must not show weakness
+map <up> <nop>
+map <down> <nop>
+map <left> <nop>
+map <right> <nop>
+
+" Swap ; and :  Convenient.
+nnoremap ; :
+nnoremap : ;
+
+" remap jj to escape in insert mode
+inoremap jj <Esc>
+
+" Disable highlight when <leader><cr> is pressed
+" map <silent> <leader><cr> :noh<cr>
+" NOT WORKING - no effect
+
+" Visual mode pressing * or # searches for the current selection
+" Super useful! From an idea by Michael Naumann
+" vnoremap <silent> * :call VisualSelection('f')<CR>
+" vnoremap <silent> # :call VisualSelection('b')<CR>
+" NOT WORKING - just leaves v?
+
+
+" Returns true if paste mode is enabled
+function! HasPaste()
+    if &paste
+        return 'PASTE MODE  '
+    en
+    return ''
+endfunction
+
+function! VisualSelection(direction) range
+    let l:saved_reg = @"
+    execute "normal! vgvy"
+
+    let l:pattern = escape(@", '\\/.*$^~[]')
+    let l:pattern = substitute(l:pattern, "\n$", "", "")
+
+    if a:direction == 'b'
+        execute "normal ?" . l:pattern . "^M"
+    elseif a:direction == 'gv'
+        call CmdLine("vimgrep " . '/'. l:pattern . '/' . ' **/*.')
+    elseif a:direction == 'replace'
+        call CmdLine("%s" . '/'. l:pattern . '/')
+    elseif a:direction == 'f'
+        execute "normal /" . l:pattern . "^M"
+    endif
+
+    let @/ = l:pattern
+    let @" = l:saved_reg
+endfunction
