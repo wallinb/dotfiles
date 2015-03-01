@@ -103,9 +103,10 @@ function! HasPaste()
 endfunction
 set laststatus=2
 set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ Col:\ %c
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+set statusline+=\ %{fugitive#statusline()}
+set statusline+=\ %#warningmsg#
+set statusline+=\ %{SyntasticStatuslineFlag()}
+set statusline+=\ %*
 
 " ##### Tab behavior
 " Use spaces instead of tabs
