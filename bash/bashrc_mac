@@ -6,3 +6,6 @@ export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 
 set -o vi
+
+# added by Anaconda 2.1.0 installer
+export PATH="/home/bwallin/anaconda/bin:$PATH"
