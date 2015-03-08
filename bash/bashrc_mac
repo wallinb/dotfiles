@@ -1,3 +1,6 @@
+eval "$(rbenv init -)"
+eval "$(pyenv init -)"
+
 export TERM=xterm-256color
 
 export PATH="$HOME/.pyenv/bin:$PATH"
@@ -9,3 +12,5 @@ set -o vi
 
 # added by Anaconda 2.1.0 installer
 export PATH="/home/bwallin/anaconda/bin:$PATH"
+
+export GDAL_DATA="/Users/wallinb/data/gdal_data"
