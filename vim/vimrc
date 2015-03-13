@@ -1,27 +1,11 @@
-" When vimrc is edited, reload it
-autocmd! bufwritepost .vimrc source %
-
-" ##### Plugin stuff
-let g:pathogen_disabled = ['vim-pyunit', 'jedi-vim', 'nerdcommenter']
-call pathogen#infect()
-call pathogen#helptags()
-
-" Syntastic options
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-
-"autocmd BufWritePost *.py call Flake8()
-
-"let g:flake8_show_in_gutter=1
-"let g:flake8_show_in_file=1
-
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlP'
-
+" ##### Vim general config
+" Cue the magic (regex)
+set magic
 
 set nocompatible
+
+" Buffers can be hidden (not have to explicitly write, etc...)
+set hidden
 
 " Shhh
 set visualbell
@@ -32,16 +16,9 @@ set history=700
 
 " Enable filetype plugins
 filetype plugin on
-filetype indent on
-
-" for vim-latex
-set grepprg=grep\ -nH\ $*
-
-" Mmm love that tex flavor
-let g:tex_flavor='latex'
 
 " Set 10 lines to the cursor - when moving vertically using j/k
-set so=20
+set so=0
 
 " Turn on the WiLd menu (vim cmd auto-complete w/ tab)
 set wildmenu
@@ -58,9 +35,88 @@ set number
 " Height of the command bar
 set cmdheight=2
 
-" Buffers can be hidden (not have to explicitly write, etc...)
-set hidden
+" Be careful, and you can avoid this backup annoyingness
+set nobackup
+set nowb
+set noswapfile
 
+" Show matching brackets
+set showmatch
+set mat=2 " tenths of seconds
+
+" Set utf8 as standard encoding and en_US as the standard language
+set encoding=utf8
+
+" Use Unix as the standard file type
+set ffs=unix,dos,mac
+
+
+" ##### Plugin stuff
+let g:pathogen_disabled = ['vim-pyunit', 'jedi-vim', 'nerdcommenter']
+call pathogen#infect()
+call pathogen#helptags()
+
+
+" ##### Look
+set t_Co=256
+set background=dark
+colorscheme solarized
+
+" Allows transparent background
+hi Normal ctermbg=none
+
+set foldmethod=indent
+
+
+" #####  Auto commands
+" When vimrc is edited, reload it
+autocmd! bufwritepost .vimrc source %
+
+" Trim whitespace, uh, comment out if estoteric programming...
+function! TrimWhiteSpace()
+    %s/\s\+$//e
+endfunction
+autocmd FileWritePre    * :call TrimWhiteSpace()
+autocmd FileAppendPre   * :call TrimWhiteSpace()
+autocmd FilterWritePre  * :call TrimWhiteSpace()
+autocmd BufWritePre     * :call TrimWhiteSpace()
+
+"autocmd BufWritePost *.py call Flake8()
+
+" Set to auto read when a file is changed from the outside
+set autoread
+
+" Return to last edit position when opening files
+autocmd BufReadPost *
+     \ if line("'\"") > 0 && line("'\"") <= line("$") |
+     \   exe "normal! g`\"" |
+     \ endif
+" Remember info about open buffers on close
+set viminfo^=%
+
+
+" ##### Syntax configs
+syntax enable
+
+" Syntastic options
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+
+" ##### Filesystem exploration
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+
+set grepprg=grep\ -nH\ $*
+
+
+" ##### Vim latex
+let g:tex_flavor='latex'
+
+
+" ##### Search related
 " Ignore case when searching
 set ignorecase
 " all lower -> insensitive, any upper -> sensitive
@@ -72,27 +128,42 @@ set hlsearch
 " Makes search act like search in modern browsers
 set incsearch
 
-" ##### Color
-set t_Co=256
+" Search for selected text, forwards or backwards.
+vnoremap <silent> * :<C-U>
+  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+  \gvy/<C-R><C-R>=substitute(
+  \escape(@", '/\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  \gV:call setreg('"', old_reg, old_regtype)<CR>
+vnoremap <silent> # :<C-U>
+  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+  \gvy?<C-R><C-R>=substitute(
+  \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  \gV:call setreg('"', old_reg, old_regtype)<CR>
 
-syntax enable
+" Rework location list navigation to iterate through list and wrap
+function! <SID>LocationPrevious()
+  try
+    lprev
+  catch /^Vim\%((\a\+)\)\=:E553/
+    llast
+  endtry
+endfunction
 
-set background=dark
-colorscheme solarized
-" Allows transparent background
-hi Normal ctermbg=none
+function! <SID>LocationNext()
+  try
+    lnext
+  catch /^Vim\%((\a\+)\)\=:E553/
+    lfirst
+  endtry
+endfunction
+
+nnoremap <silent> <Plug>LocationPrevious :<C-u>exe 'call <SID>LocationPrevious()'<CR>
+nnoremap <silent> <Plug>LocationNext :<C-u>exe 'call <SID>LocationNext()'<CR>
+nmap <silent> ,, <Plug>LocationPrevious
+nmap <silent> '' <Plug>LocationNext
 
 
-" Be careful, and you can avoid this backup annoyingness
-set nobackup
-set nowb
-set noswapfile
-
-" Show matching brackets
-set showmatch
-set mat=2 " tenths of seconds
-
-" Format the status line
+" ##### Status line
 " Returns true if paste mode is enabled
 function! HasPaste()
     if &paste
@@ -108,13 +179,16 @@ set statusline+=\ %#warningmsg#
 set statusline+=\ %{SyntasticStatuslineFlag()}
 set statusline+=\ %*
 
+
 " ##### Tab behavior
 " Use spaces instead of tabs
 set expandtab
 " 1 tab == 4 spaces
 set shiftwidth=4
 set softtabstop=4
+filetype indent on
 set autoindent " Basic auto-indent
+
 
 " ##### Wrapping
 set wrap
@@ -123,24 +197,8 @@ set nolist  " list disables linebreak
 set textwidth=0
 set wrapmargin=0
 
-" Configure backspace so it acts as it should act
-set backspace=eol,start,indent
-" And commands can wrap
-set whichwrap+=<,>,h,l
 
-" ##### Programming specific...
-" Delete trailing white space on save
-func! DeleteTrailingWS()
-  exe "normal mz"
-  %s/\s\+$//ge
-  exe "normal `z"
-endfunc
-autocmd BufWrite *.py :call DeleteTrailingWS()
-
-set foldmethod=indent
-
-
-" ##### Key binds etc...
+" ##### Key binds
 let mapleader=","
 let g:mapleader = "," " Global?
 
@@ -171,73 +229,7 @@ inoremap jj <Esc>
 " This unsets the "last search pattern" register by hitting return
 nnoremap <CR> :noh<CR><CR>
 
-" Visual mode pressing * or # searches for the current selection
-" Super useful! From an idea by Michael Naumann
-" vnoremap <silent> * :call VisualSelection('f')<CR>
-" vnoremap <silent> # :call VisualSelection('b')<CR>
-" NOT WORKING - just leaves v?
-
-" function! VisualSelection(direction) range
-"     let l:saved_reg = @"
-"     execute "normal! vgvy"
-"
-"     let l:pattern = escape(@", '\\/.*$^~[]')
-"     let l:pattern = substitute(l:pattern, "\n$", "", "")
-"
-"     if a:direction == 'b'
-"         execute "normal ?" . l:pattern . "^M"
-"     elseif a:direction == 'gv'
-"         call CmdLine("vimgrep " . '/'. l:pattern . '/' . ' **/*.')
-"     elseif a:direction == 'replace'
-"         call CmdLine("%s" . '/'. l:pattern . '/')
-"     elseif a:direction == 'f'
-"         execute "normal /" . l:pattern . "^M"
-"     endif
-"
-"     let @/ = l:pattern
-"     let @" = l:saved_reg
-" endfunction
-
-" Rework location list navigation to iterate through list and wrap
-function! <SID>LocationPrevious()
-  try
-    lprev
-  catch /^Vim\%((\a\+)\)\=:E553/
-    llast
-  endtry
-endfunction
-
-function! <SID>LocationNext()
-  try
-    lnext
-  catch /^Vim\%((\a\+)\)\=:E553/
-    lfirst
-  endtry
-endfunction
-
-nnoremap <silent> <Plug>LocationPrevious :<C-u>exe 'call <SID>LocationPrevious()'<CR>
-nnoremap <silent> <Plug>LocationNext :<C-u>exe 'call <SID>LocationNext()'<CR>
-nmap <silent> ,, <Plug>LocationPrevious
-nmap <silent> .. <Plug>LocationNext
-
-" Removes trailing spaces
-function! TrimWhiteSpace()
-    %s/\s\+$//e
-endfunction
-
-autocmd FileWritePre    * :call TrimWhiteSpace()
-autocmd FileAppendPre   * :call TrimWhiteSpace()
-autocmd FilterWritePre  * :call TrimWhiteSpace()
-autocmd BufWritePre     * :call TrimWhiteSpace()
-
-" Search for selected text, forwards or backwards.
-vnoremap <silent> * :<C-U>
-  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
-  \gvy/<C-R><C-R>=substitute(
-  \escape(@", '/\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
-  \gV:call setreg('"', old_reg, old_regtype)<CR>
-vnoremap <silent> # :<C-U>
-  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
-  \gvy?<C-R><C-R>=substitute(
-  \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
-  \gV:call setreg('"', old_reg, old_regtype)<CR>
+" Configure backspace so it acts as it should act
+set backspace=eol,start,indent
+" And commands can wrap
+set whichwrap+=<,>,h,l
