@@ -6,3 +6,5 @@ alias vn="vagrant nsidc"
 
 alias Gstatus="git status"
 alias Gcommit="git commit"
+
+alias vim-geeknote='vi -c Geeknote'
