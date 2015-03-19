@@ -8,3 +8,5 @@ alias Gstatus="git status"
 alias Gcommit="git commit"
 
 alias vim-geeknote='vi -c Geeknote'
+
+alias more='less -R'
