@@ -1,20 +1,13 @@
-eval "$(rbenv init -)"
-eval "$(pyenv init -)"
-
 export TERM=xterm-256color
 
-export PATH="$HOME/.pyenv/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+export VISUAL=vim
+export EDITOR=vim
 
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 
 set -o vi
 
-# # added by Anaconda 2.1.0 installer
-# export PATH="/home/bwallin/anaconda/bin:$PATH"
-
-export GDAL_DATA="/Users/wallinb/data/gdal_data"
+export PATH="/home/bwallin/miniconda/bin:$PATH"
 
 . ~/.bash_aliases
