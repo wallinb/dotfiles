@@ -51,10 +51,19 @@ set encoding=utf8
 set ffs=unix,dos,mac
 
 
-" ##### Plugin stuff
-let g:pathogen_disabled = ['vim-pyunit', 'jedi-vim', 'nerdcommenter']
-call pathogen#infect()
-call pathogen#helptags()
+" ##### Load plugins
+call plug#begin('~/.nvim/plugged')
+Plug 'kien/ctrlp.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'scrooloose/syntastic'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-vinegar'
+Plug 'tpope/vim-liquid'
+Plug 'jpalardy/vim-slime'
+Plug 'rking/ag.vim'
+call plug#end()
+
+let g:slime_target = "tmux"
 
 " ##### Look
 set t_Co=256
@@ -171,11 +180,11 @@ nmap <silent> '' <Plug>LocationNext
 "     endif
 " endfunction
 set laststatus=2
-set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ Col:\ %c
-set statusline+=\ %{fugitive#statusline()}
-set statusline+=\ %#warningmsg#
-set statusline+=\ %{SyntasticStatuslineFlag()}
-set statusline+=\ %*
+" set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ Col:\ %c
+" set statusline+=\ %{fugitive#statusline()}
+" set statusline+=\ %#warningmsg#
+" set statusline+=\ %{SyntasticStatuslineFlag()}
+" set statusline+=\ %*
 
 
 " ##### Tab behavior
