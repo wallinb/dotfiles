@@ -3,7 +3,7 @@
 " ##############################################################################
 
 " When vimrc is edited, reload it
-autocmd! bufwritepost .vimrc source %
+autocmd! bufwritepost .rvimrc source %
 
 " Trim whitespace, uh, comment out if estoteric programming...
 function! TrimWhiteSpace()
@@ -102,7 +102,7 @@ Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-liquid'
 Plug 'jpalardy/vim-slime'
 Plug 'rking/ag.vim'
-Plug 'jisaacks/GitGutter.git'
+Plug 'airblade/vim-gitgutter'
 call plug#end()
 
 let g:slime_target = "tmux"
