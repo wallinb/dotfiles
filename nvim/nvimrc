@@ -94,21 +94,24 @@ set ffs=unix,dos,mac
 " ##############################################################################
 
 call plug#begin('~/.nvim/plugged')
-Plug 'kien/ctrlp.vim'
 Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
+Plug 'idanarye/vim-merginal'
 Plug 'scrooloose/syntastic'
+Plug 'kien/ctrlp.vim'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-liquid'
 Plug 'jpalardy/vim-slime'
 Plug 'rking/ag.vim'
-Plug 'airblade/vim-gitgutter'
 Plug 'hynek/vim-python-pep8-indent'
 Plug 'pangloss/vim-javascript'
 " Plug 'Valloric/YouCompleteMe'
 Plug 'marijnh/tern_for_vim'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'Raimondi/delimitMate.git'
+Plug 'Raimondi/delimitMate'
+Plug 'davidhalter/jedi-vim'
+Plug 'altercation/vim-colors-solarized'
 call plug#end()
 
 let g:slime_target = "tmux"
