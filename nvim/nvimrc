@@ -3,7 +3,7 @@
 " ##############################################################################
 
 " When vimrc is edited, reload it
-autocmd! bufwritepost .rvimrc source %
+autocmd! bufwritepost .nvimrc source %
 
 " Trim whitespace, uh, comment out if estoteric programming...
 function! TrimWhiteSpace()
@@ -103,6 +103,12 @@ Plug 'tpope/vim-liquid'
 Plug 'jpalardy/vim-slime'
 Plug 'rking/ag.vim'
 Plug 'airblade/vim-gitgutter'
+Plug 'hynek/vim-python-pep8-indent'
+Plug 'pangloss/vim-javascript'
+" Plug 'Valloric/YouCompleteMe'
+Plug 'marijnh/tern_for_vim'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'Raimondi/delimitMate.git'
 call plug#end()
 
 let g:slime_target = "tmux"
@@ -258,11 +264,11 @@ map <space> /
 map <c-space> ?
 set pastetoggle=<F2>
 
-" Ctrl movement keys moves around splits
-map <c-l> <c-w>l
-map <c-h> <c-w>h
-map <c-j> <c-w>j
-map <c-k> <c-w>k
+" " Ctrl movement keys moves around splits (uneeded with vim-tmux-navigator
+" map <c-l> <c-w>l
+" map <c-h> <c-w>h
+" map <c-j> <c-w>j
+" map <c-k> <c-w>k
 
 " Disable arrows, must not show weakness
 map <up> <nop>
