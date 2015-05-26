@@ -4,6 +4,12 @@ set magic
 
 set nocompatible
 
+" Open folds on file-open
+autocmd Syntax c,cpp,vim,xml,html,xhtml,perl,python normal zR
+
+" Use aliases
+let $BASH_ENV = "~/.bash_aliases"
+
 " Buffers can be hidden (not have to explicitly write, etc...)
 set hidden
 
