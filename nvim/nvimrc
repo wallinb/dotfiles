@@ -1,28 +1,10 @@
 " ##############################################################################
-" Auto commands
-" ##############################################################################
-
-" When vimrc is edited, reload it
-autocmd! bufwritepost .nvimrc source %
-
-" Trim whitespace, uh, comment out if estoteric programming...
-function! TrimWhiteSpace()
-    %s/\s\+$//e
-endfunction
-autocmd FileWritePre    * :call TrimWhiteSpace()
-autocmd FileAppendPre   * :call TrimWhiteSpace()
-autocmd FilterWritePre  * :call TrimWhiteSpace()
-autocmd BufWritePre     * :call TrimWhiteSpace()
-
-" If you weren't using syntastic...for some reason
-"autocmd BufWritePost *.py call Flake8()
-
-
-" ##############################################################################
 " Vim general config
 " ##############################################################################
 
 set nocompatible
+
+set clipboard=unnamed
 
 " Use aliases
 let $BASH_ENV = "~/.bash_aliases"
@@ -102,16 +84,18 @@ Plug 'kien/ctrlp.vim'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-liquid'
+Plug 'tpope/vim-surround'
 Plug 'jpalardy/vim-slime'
 Plug 'rking/ag.vim'
 Plug 'hynek/vim-python-pep8-indent'
 Plug 'pangloss/vim-javascript'
 " Plug 'Valloric/YouCompleteMe'
-Plug 'marijnh/tern_for_vim'
+" Plug 'marijnh/tern_for_vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'Raimondi/delimitMate'
 Plug 'davidhalter/jedi-vim'
 Plug 'altercation/vim-colors-solarized'
+Plug 'walkermatt/vim-mapfile'
 call plug#end()
 
 let g:slime_target = "tmux"
@@ -251,7 +235,7 @@ set autoindent " Basic auto-indent
 set wrap
 set linebreak "Only at linebreak
 set nolist  " list disables linebreak
-set textwidth=0
+set textwidth=100
 set wrapmargin=0
 
 
@@ -306,3 +290,26 @@ vnoremap <silent> # :<C-U>
   \gvy?<C-R><C-R>=substitute(
   \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
   \gV:call setreg('"', old_reg, old_regtype)<CR>
+
+
+" ##############################################################################
+" Auto commands
+" ##############################################################################
+
+" When vimrc is edited, reload it
+autocmd! bufwritepost .nvimrc source %
+
+" Trim whitespace, uh, comment out if estoteric programming...
+function! TrimWhiteSpace()
+    %s/\s\+$//e
+endfunction
+autocmd FileWritePre    * :call TrimWhiteSpace()
+autocmd FileAppendPre   * :call TrimWhiteSpace()
+autocmd FilterWritePre  * :call TrimWhiteSpace()
+autocmd BufWritePre     * :call TrimWhiteSpace()
+
+" If you weren't using syntastic...for some reason
+"autocmd BufWritePost *.py call Flake8()
+
+" Tab behavior for filetypes
+autocmd FileType html,xml,javascript setlocal shiftwidth=2 tabstop=2 softtabstop=2
