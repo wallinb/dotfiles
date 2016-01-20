@@ -1,13 +1,12 @@
+shopt -s expand_aliases
 alias ll="ls -l"
 alias lla="ls -la"
 alias df="df -Tha --total"
 
 alias vn="vagrant nsidc"
 
-alias Gstatus="git status"
-alias Gcommit="git commit"
-
-alias vim-geeknote='vi -c Geeknote'
+alias h="history"
 
 alias more='less -R'
+
 alias vim='nvim'
