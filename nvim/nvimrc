@@ -89,13 +89,20 @@ Plug 'jpalardy/vim-slime'
 Plug 'rking/ag.vim'
 Plug 'hynek/vim-python-pep8-indent'
 Plug 'pangloss/vim-javascript'
+Plug 'mxw/vim-jsx'
 " Plug 'Valloric/YouCompleteMe'
 " Plug 'marijnh/tern_for_vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'Raimondi/delimitMate'
-Plug 'davidhalter/jedi-vim'
-Plug 'altercation/vim-colors-solarized'
+" Plug 'davidhalter/jedi-vim'
 Plug 'walkermatt/vim-mapfile'
+Plug 'rodjek/vim-puppet'
+Plug 'godlygeek/tabular'
+Plug 'tell-k/vim-autopep8'
+Plug 'vim-scripts/paredit.vim'
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'vim-scripts/Solarized'
 call plug#end()
 
 let g:slime_target = "tmux"
@@ -112,13 +119,26 @@ let g:syntastic_check_on_wq = 0
 
 let g:gitgutter_realtime = 1
 
+au BufRead,BufNewFile *.map,*.sym set filetype=mapfile
+
+let g:jsx_ext_required = 0
+let g:syntastic_javascript_checkers=['eslint']
+
+let g:SuperTabDefaultCompletionType = "context"
+let g:jedi#popup_on_dot = 0
+
+nnoremap <F3> :Gstatus<CR>
+nnoremap <F4> :MerginalToggle<CR>
 
 " ##############################################################################
 " Look
 " ##############################################################################
 
-set t_Co=256
+set t_Co=16
 set background=dark
+" Solarized
+let g:solarized_termcolors=16
+let g:solarized_contrast="high"
 colorscheme solarized
 
 " Allows transparent background
@@ -126,6 +146,7 @@ hi Normal ctermbg=none
 
 syntax enable
 set foldmethod=syntax
+set foldlevel=99
 
 " Returns true if paste mode is enabled
 function! HasPaste()
@@ -143,9 +164,6 @@ set statusline+=\ %#warningmsg#
 set statusline+=\ %{SyntasticStatuslineFlag()}
 set statusline+=\ %*
 
-
-" folding/highlighting for mapserver map files
-autocmd BufRead *.map set filetype=map
 
 " ##############################################################################
 " Search related
@@ -297,7 +315,7 @@ vnoremap <silent> # :<C-U>
 " ##############################################################################
 
 " When vimrc is edited, reload it
-autocmd! bufwritepost .nvimrc source %
+autocmd! bufwritepost .vimrc source %
 
 " Trim whitespace, uh, comment out if estoteric programming...
 function! TrimWhiteSpace()
@@ -312,4 +330,7 @@ autocmd BufWritePre     * :call TrimWhiteSpace()
 "autocmd BufWritePost *.py call Flake8()
 
 " Tab behavior for filetypes
-autocmd FileType html,xml,javascript setlocal shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType html,xml,javascript,yaml setlocal shiftwidth=4 tabstop=4 softtabstop=4
+
+" Auto save on text changes
+" autocmd InsertLeave * if expand('%') != '' | update | endif
