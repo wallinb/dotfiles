@@ -1,50 +1,17 @@
-# channel locations. These override conda defaults, i.e., conda will
-# search *only* the channels listed here, in the order given. Use "defaults" to
-# automatically include all default channels. Non-url channels will be
-# interpreted as binstar usernames (this can be changed by modifying the
-# channel_alias key; see below).
+allow_softlinks: true
+always_yes: true
+binstar_personal: true
+changeps1: true
 channels:
-  - nsidc
-  - bwallin
-  - osgeo
-  - defaults
-
-# filters out all channels URL's which do not start with 'file:'
-offline: False
-
-# implies always using the --yes option whenever asked to proceed
-always_yes: True
-
-# disallow soft-linking (default is allow_softlinks: True,
-#                        i.e. soft-link when possible)
-allow_softlinks: True
-
-# change ps1 when using activate (default True)
-changeps1: True
-
-# use pip when listing packages (default True)
-use_pip: False
-
-# binstar.org upload (not defined here means ask)
-# binstar_upload: yes
-# do not upload binstar packages to the public channel (default True)
-binstar_personal: True
-
-# when creating new environments add these packages by default
-create_default_packages:
-  - python
-  - pip
-  - flake8
-  - fabric
-  - bumpversion
-  - jinja2
-  - rednose
-  - nose
-
-# disallowed specification names
+- https://conda.anaconda.org/NSIDC/channel/dev
+- pypi
+- johannr
+- nsidc
+- bwallin
+- osgeo
+- defaults
 disallow:
-  - anaconda
-
-# show channel URLs when displaying what is going to be downloaded, and
-# in conda list
-show_channel_urls: True
+- anaconda
+offline: false
+show_channel_urls: true
+use_pip: false
