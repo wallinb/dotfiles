@@ -1,5 +1,5 @@
 " ##############################################################################
-" Vim general config
+" NeoVIM general config
 " ##############################################################################
 
 set nocompatible
@@ -49,6 +49,9 @@ set wildignore=*.o,*~,*.pyc
 " Always show current position
 set ruler
 
+" Title terminal with name of file
+set title
+
 " Set line num
 set number
 
@@ -79,7 +82,8 @@ call plug#begin('~/.nvim/plugged')
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 Plug 'idanarye/vim-merginal'
-Plug 'scrooloose/syntastic'
+" Plug 'scrooloose/syntastic'
+Plug 'benekastah/neomake'
 Plug 'kien/ctrlp.vim'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-vinegar'
@@ -112,12 +116,22 @@ let g:tex_flavor='latex'
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 1
+" let g:syntastic_check_on_open = 1
+" let g:syntastic_check_on_wq = 0
+
+let g:neomake_open_list = 2
+let g:neomake_javascript_enabled_makers = ['eslint']
 
 let g:gitgutter_realtime = 1
+" let g:gitgutter_override_sign_column_highlight = 0
+" highlight SignColumn ctermbg=002831 " terminal Vim
+highlight clear SignColumn
+highlight GitGutterAdd ctermfg=green guifg=darkgreen
+highlight GitGutterChange ctermfg=yellow guifg=darkyellow
+highlight GitGutterDelete ctermfg=red guifg=darkred
+highlight GitGutterChangeDelete ctermfg=yellow guifg=darkyellow
 
 au BufRead,BufNewFile *.map,*.sym set filetype=mapfile
 
@@ -161,7 +175,6 @@ set laststatus=2
 set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ Col:\ %c
 set statusline+=\ %{fugitive#statusline()}
 set statusline+=\ %#warningmsg#
-set statusline+=\ %{SyntasticStatuslineFlag()}
 set statusline+=\ %*
 
 
@@ -181,6 +194,13 @@ set hlsearch
 
 " Makes search act like search in modern browsers
 set incsearch
+
+" allows incsearch highlighting for range commands
+cnoremap $t <CR>:t''<CR>
+cnoremap $T <CR>:T''<CR>
+cnoremap $m <CR>:m''<CR>
+cnoremap $M <CR>:M''<CR>
+cnoremap $d <CR>:d<CR>``
 
 " Rework location list navigation to iterate through list and wrap
 function! <SID>LocationPrevious()
@@ -315,7 +335,7 @@ vnoremap <silent> # :<C-U>
 " ##############################################################################
 
 " When vimrc is edited, reload it
-autocmd! bufwritepost .vimrc source %
+autocmd! bufwritepost .nvimrc source %
 
 " Trim whitespace, uh, comment out if estoteric programming...
 function! TrimWhiteSpace()
@@ -330,7 +350,10 @@ autocmd BufWritePre     * :call TrimWhiteSpace()
 "autocmd BufWritePost *.py call Flake8()
 
 " Tab behavior for filetypes
-autocmd FileType html,xml,javascript,yaml setlocal shiftwidth=4 tabstop=4 softtabstop=4
+autocmd FileType html,htmldjango,xml,javascript,yaml setlocal shiftwidth=2 tabstop=2 softtabstop=2
 
 " Auto save on text changes
 " autocmd InsertLeave * if expand('%') != '' | update | endif
+
+" Check syntax on write
+autocmd! BufWritePost * Neomake
