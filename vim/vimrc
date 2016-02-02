@@ -1,5 +1,5 @@
 " ##############################################################################
-" Vim general config
+" VIM General config
 " ##############################################################################
 
 set nocompatible
@@ -31,7 +31,7 @@ set hidden
 set visualbell
 set noerrorbells
 
-" Sets how many lines of history VIM has to remember
+" Sets how many lines of history to remember
 set history=700
 
 " Enable filetype plugins
@@ -48,6 +48,9 @@ set wildignore=*.o,*~,*.pyc
 
 " Always show current position
 set ruler
+
+" Title terminal with name of file
+set title
 
 " Set line num
 set number
@@ -182,6 +185,13 @@ set hlsearch
 " Makes search act like search in modern browsers
 set incsearch
 
+" allows incsearch highlighting for range commands
+cnoremap $t <CR>:t''<CR>
+cnoremap $T <CR>:T''<CR>
+cnoremap $m <CR>:m''<CR>
+cnoremap $M <CR>:M''<CR>
+cnoremap $d <CR>:d<CR>``
+
 " Rework location list navigation to iterate through list and wrap
 function! <SID>LocationPrevious()
   try
@@ -314,9 +324,6 @@ vnoremap <silent> # :<C-U>
 " Auto commands
 " ##############################################################################
 
-" When vimrc is edited, reload it
-autocmd! bufwritepost .vimrc source %
-
 " Trim whitespace, uh, comment out if estoteric programming...
 function! TrimWhiteSpace()
     %s/\s\+$//e
@@ -334,3 +341,6 @@ autocmd FileType html,xml,javascript,yaml setlocal shiftwidth=4 tabstop=4 softta
 
 " Auto save on text changes
 " autocmd InsertLeave * if expand('%') != '' | update | endif
+
+" When vimrc is edited, reload it
+autocmd! bufwritepost .vimrc source %
