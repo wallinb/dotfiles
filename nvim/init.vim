@@ -4,7 +4,7 @@
 
 set nocompatible
 
-set clipboard=unnamed
+set clipboard=unnamedplus
 
 " Use aliases
 let $BASH_ENV = "~/.bash_aliases"
@@ -44,7 +44,7 @@ set so=5
 set wildmenu
 
 " Ignore compiled files
-set wildignore=*.o,*~,*.pyc
+set wildignore=*.o,*~,*.pyc,*dist/*,*tmp/*,*build/*,*.DS_Store
 
 " Always show current position
 set ruler
@@ -73,6 +73,7 @@ set encoding=utf8
 " Use Unix as the standard file type
 set ffs=unix,dos,mac
 
+set diffopt+=vertical
 
 " ##############################################################################
 " Plugins

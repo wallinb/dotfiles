@@ -1,11 +1,14 @@
-ln -s ~/configs/readline/inputrc ~/.inputrc
-ln -s ~/configs/tmux/tmux.conf ~/.tmux.conf
+#!/usr/bin/env bash
 
-ln -s ~/configs/vim/vimrc ~/.vimrc
-ln -s ~/configs/nvim/nvimrc ~/.nvimrc
+ln -s ~/dotfiles/readline/inputrc ~/.inputrc
+ln -s ~/dotfiles/tmux/tmux.conf ~/.tmux.conf
 
-ln -s ~/configs/bash/bashrc_linux ~/.bashrc
-# ln -s ~/configs/tmux/bashrc_mac ~/.bashrc
-ln -s ~/configs/bash/bash_aliases ~/.bash_aliases
+ln -s ~/dotfiles/vim/vimrc ~/.vimrc
+mkdir -p ~/.config/nvim
+ln -s ~/dotfiles/nvim/init.vim ~/.config/nvim/init.vim
 
-ln -s ~/configs/flake8rc ~/flake8rc
+# ln -s ~/dotfiles/bash/bashrc_linux ~/.bashrc
+ln -s ~/dotfiles/bash/bashrc_mac ~/.bashrc
+ln -s ~/dotfiles/bash/bash_aliases ~/.bash_aliases
+
+ln -s ~/dotfiles/flake8 ~/.config/flake8

@@ -5,10 +5,7 @@ changeps1: true
 channels:
 - https://conda.anaconda.org/NSIDC/channel/dev
 - pypi
-- johannr
 - nsidc
-- bwallin
-- osgeo
 - defaults
 disallow:
 - anaconda
