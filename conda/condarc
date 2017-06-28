@@ -1,14 +1,12 @@
 allow_softlinks: true
 always_yes: true
-binstar_personal: true
 changeps1: true
 channels:
-- https://conda.anaconda.org/NSIDC/channel/dev
-- pypi
-- nsidc
-- defaults
+  - conda-forge
+  - nsidc
+  - defaults
 disallow:
-- anaconda
+  - anaconda
 offline: false
 show_channel_urls: true
 use_pip: false

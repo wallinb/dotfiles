@@ -1,7 +1,7 @@
 shopt -s expand_aliases
 alias ll="ls -l"
 alias lla="ls -la"
-alias df="df -Tha"
+alias df="df -ha"
 
 alias vn="vagrant nsidc"
 
@@ -9,6 +9,5 @@ alias h="history"
 
 alias more='less -R'
 
-alias vim='nvim'
-
 alias gbc='git branch --merged | grep -v "\*" | xargs -n 1 git branch -d'
+alias ipython='ipython --TerminalInteractiveShell.editing_mode=vi'

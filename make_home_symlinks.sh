@@ -12,3 +12,4 @@ ln -s ~/dotfiles/bash/bashrc_mac ~/.bashrc
 ln -s ~/dotfiles/bash/bash_aliases ~/.bash_aliases
 
 ln -s ~/dotfiles/flake8 ~/.config/flake8
+ln -s ~/dotfiles/ipython/ipython_config.py ~/.ipython/profile_default/ipython_config.py
