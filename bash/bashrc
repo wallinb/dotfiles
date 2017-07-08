@@ -1,0 +1,21 @@
+export TERM=xterm-256color
+
+export VISUAL=vim
+export EDITOR=vim
+
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
+
+set -o vi
+
+export PS1="\[\e[0;32m\]\u\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;32m\]\[\e[m\] \[\e[1;37m\] \n$ "
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+
+if [ "$(uname)" = "Darwin" ]; then
+    source ~/.bashrc_osx
+elif [ "$(uname)" = "Linux" ]; then
+    source ~/.bashrc_linux
+fi
