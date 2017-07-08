@@ -4,7 +4,7 @@
 
 set nocompatible
 
-set clipboard=unnamed
+set clipboard=unnamedplus
 
 " Use aliases
 let $BASH_ENV = "~/.bash_aliases"
@@ -44,7 +44,7 @@ set so=5
 set wildmenu
 
 " Ignore compiled files
-set wildignore=*.o,*~,*.pyc
+set wildignore=*.o,*~,*.pyc,*dist/*,*tmp/*,*build/*,*.DS_Store
 
 " Always show current position
 set ruler
@@ -67,11 +67,13 @@ set noswapfile
 set showmatch
 set mat=2 " tenths of seconds
 
-" set encoding=utf8
-
 " Use Unix as the standard file type
 set ffs=unix,dos,mac
 
+set diffopt+=vertical
+
+" Disable python 2 support
+let g:loaded_python_provider = 1
 
 " ##############################################################################
 " Plugins
@@ -82,10 +84,13 @@ Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 Plug 'idanarye/vim-merginal'
 Plug 'benekastah/neomake'
+" Plug 'kien/ctrlp.vim'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-vinegar'
-Plug 'tpope/vim-liquid'
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+Plug 'svermeulen/vim-easyclip'
 Plug 'jpalardy/vim-slime'
 Plug 'rking/ag.vim'
 Plug 'hynek/vim-python-pep8-indent'
@@ -93,6 +98,7 @@ Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'Raimondi/delimitMate'
+" Plug 'davidhalter/jedi-vim'
 Plug 'walkermatt/vim-mapfile'
 Plug 'rodjek/vim-puppet'
 Plug 'godlygeek/tabular'
@@ -101,7 +107,12 @@ Plug 'vim-scripts/paredit.vim'
 Plug 'honza/vim-snippets'
 Plug 'bfredl/nvim-ipy'
 Plug 'neilagabriel/vim-geeknote'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'vim-scripts/Solarized'
+Plug 'benjie/neomake-local-eslint.vim'
+Plug 'leafgarland/typescript-vim'
+Plug 'Rykka/riv.vim'
+Plug 'Rykka/InstantRst'
+Plug 'JamshedVesuna/vim-markdown-preview'
 call plug#end()
 
 let g:slime_target = "tmux"
@@ -109,7 +120,6 @@ let g:slime_target = "tmux"
 let g:tex_flavor='latex'
 
 let g:neomake_open_list = 2
-let g:neomake_javascript_enabled_makers = ['eslint']
 
 let g:gitgutter_realtime = 1
 " let g:gitgutter_override_sign_column_highlight = 0
@@ -120,16 +130,31 @@ highlight GitGutterChange ctermfg=yellow guifg=darkyellow
 highlight GitGutterDelete ctermfg=red guifg=darkred
 highlight GitGutterChangeDelete ctermfg=yellow guifg=darkyellow
 
-au BufRead,BufNewFile *.map,*.sym set filetype=mapfile
-
 let g:jsx_ext_required = 0
-let g:syntastic_javascript_checkers=['eslint']
 
 let g:SuperTabDefaultCompletionType = "context"
 let g:jedi#popup_on_dot = 0
 
 nnoremap <F3> :Gstatus<CR>
 nnoremap <F4> :MerginalToggle<CR>
+nnoremap <c-p> :FZF<CR>
+
+let notes = { 'Name': 'Notes', 'path': '~/drive/notes',}
+let g:riv_projects = [notes]
+
+let vim_markdown_preview_toggle=2
+let vim_markdown_preview_github=1
+let vim_markdown_preview_hotkey='<c-m>'
+let vim_markdown_preview_hotkey='<c-m>'
+let vim_markdown_preview_browser='Google Chrome'
+
+let g:EasyClipUseSubstituteDefaults = 1
+
+" ##############################################################################
+" Filetype
+" ##############################################################################
+
+au BufRead,BufNewFile *.map,*.sym set filetype=mapfile
 
 noremap <F8> :Geeknote<cr>
 
@@ -149,21 +174,26 @@ colorscheme delek
 " Allows transparent background
 hi Normal ctermbg=none
 
-" Returns true if paste mode is enabled
-function! HasPaste()
-    if &paste
-        return 'PASTE MODE  '
-    else
-        return ''
-    endif
-endfunction
+" Folding
+syntax enable
+set foldmethod=syntax
+set foldlevel=99
+hi Folded ctermfg=250
+hi Folded ctermbg=236
 
+" Statusline
 set laststatus=2
-set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ Col:\ %c
+set statusline=\ %F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ Col:\ %c
 set statusline+=\ %{fugitive#statusline()}
 set statusline+=\ %#warningmsg#
 set statusline+=\ %*
 
+function! MyFoldText()
+    let line = getline(v:foldstart)
+    return '↸ ' . line
+endfunction
+
+set foldtext=MyFoldText()
 
 " ##############################################################################
 " Search related
@@ -277,10 +307,10 @@ map <c-space> ?
 set pastetoggle=<F2>
 
 " " Ctrl movement keys moves around splits (uneeded with vim-tmux-navigator
-" map <c-l> <c-w>l
-" map <c-h> <c-w>h
-" map <c-j> <c-w>j
-" map <c-k> <c-w>k
+map <c-l> <c-w>l
+map <c-h> <c-w>h
+map <c-j> <c-w>j
+map <c-k> <c-w>k
 
 " Disable arrows, must not show weakness
 map <up> <nop>
@@ -316,7 +346,6 @@ vnoremap <silent> # :<C-U>
   \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
   \gV:call setreg('"', old_reg, old_regtype)<CR>
 
-
 " ##############################################################################
 " Auto commands
 " ##############################################################################
@@ -337,7 +366,7 @@ autocmd BufWritePre     * :call TrimWhiteSpace()
 "autocmd BufWritePost *.py call Flake8()
 
 " Tab behavior for filetypes
-autocmd FileType html,htmldjango,xml,javascript,yaml setlocal shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType html,htmldjango,xml,javascript,yaml,css setlocal shiftwidth=2 tabstop=2 softtabstop=2
 
 " Auto save on text changes
 " autocmd InsertLeave * if expand('%') != '' | update | endif
