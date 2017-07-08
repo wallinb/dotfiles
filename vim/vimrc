@@ -122,11 +122,11 @@ let g:tex_flavor='latex'
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 
-" let g:syntastic_always_populate_loc_list = 1
-" let g:syntastic_auto_loc_list = 1
-" let g:syntastic_check_on_open = 1
-" let g:syntastic_check_on_wq = 0
-" let g:syntastic_javascript_checkers=['eslint']
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_javascript_checkers=['eslint']
 
 let g:gitgutter_realtime = 1
 highlight clear SignColumn
@@ -155,6 +155,7 @@ let vim_markdown_preview_hotkey='<c-m>'
 let vim_markdown_preview_browser='Google Chrome'
 
 let g:EasyClipUseSubstituteDefaults = 1
+nmap M <Plug>MoveMotionEndOfLinePlug
 
 " ##############################################################################
 " Filetype
