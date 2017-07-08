@@ -137,10 +137,10 @@ nnoremap <F4> :MerginalToggle<CR>
 " Look
 " ##############################################################################
 
-set t_Co=16
+set t_Co=256
 set background=dark
 " Solarized
-let g:solarized_termcolors=16
+let g:solarized_termcolors=256
 let g:solarized_contrast="high"
 colorscheme solarized
 

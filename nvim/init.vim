@@ -67,8 +67,7 @@ set noswapfile
 set showmatch
 set mat=2 " tenths of seconds
 
-" Set utf8 as standard encoding and en_US as the standard language
-set encoding=utf8
+" set encoding=utf8
 
 " Use Unix as the standard file type
 set ffs=unix,dos,mac
@@ -82,9 +81,7 @@ call plug#begin('~/.nvim/plugged')
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 Plug 'idanarye/vim-merginal'
-" Plug 'scrooloose/syntastic'
 Plug 'benekastah/neomake'
-Plug 'kien/ctrlp.vim'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-liquid'
@@ -94,32 +91,22 @@ Plug 'rking/ag.vim'
 Plug 'hynek/vim-python-pep8-indent'
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
-" Plug 'Valloric/YouCompleteMe'
-" Plug 'marijnh/tern_for_vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'Raimondi/delimitMate'
-" Plug 'davidhalter/jedi-vim'
 Plug 'walkermatt/vim-mapfile'
 Plug 'rodjek/vim-puppet'
 Plug 'godlygeek/tabular'
 Plug 'tell-k/vim-autopep8'
 Plug 'vim-scripts/paredit.vim'
-Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
-Plug 'vim-scripts/Solarized'
+Plug 'bfredl/nvim-ipy'
+Plug 'neilagabriel/vim-geeknote'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 call plug#end()
 
 let g:slime_target = "tmux"
 
 let g:tex_flavor='latex'
-
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlP'
-
-" let g:syntastic_always_populate_loc_list = 1
-" let g:syntastic_auto_loc_list = 1
-" let g:syntastic_check_on_open = 1
-" let g:syntastic_check_on_wq = 0
 
 let g:neomake_open_list = 2
 let g:neomake_javascript_enabled_makers = ['eslint']
@@ -144,23 +131,23 @@ let g:jedi#popup_on_dot = 0
 nnoremap <F3> :Gstatus<CR>
 nnoremap <F4> :MerginalToggle<CR>
 
+noremap <F8> :Geeknote<cr>
+
+nnoremap <c-p> :FZF<CR>
+
 " ##############################################################################
 " Look
 " ##############################################################################
 
-set t_Co=16
-set background=dark
-" Solarized
-let g:solarized_termcolors=16
-let g:solarized_contrast="high"
-colorscheme solarized
-
-" Allows transparent background
-hi Normal ctermbg=none
-
 syntax enable
 set foldmethod=syntax
 set foldlevel=99
+
+set background=dark
+colorscheme delek
+
+" Allows transparent background
+hi Normal ctermbg=none
 
 " Returns true if paste mode is enabled
 function! HasPaste()
@@ -335,7 +322,7 @@ vnoremap <silent> # :<C-U>
 " ##############################################################################
 
 " When vimrc is edited, reload it
-autocmd! bufwritepost .nvimrc source %
+autocmd! bufwritepost init.vim source %
 
 " Trim whitespace, uh, comment out if estoteric programming...
 function! TrimWhiteSpace()
