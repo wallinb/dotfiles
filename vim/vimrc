@@ -167,13 +167,6 @@ au BufRead,BufNewFile *.map,*.sym set filetype=mapfile
 " Look
 " ##############################################################################
 
-set t_Co=256
-set background=dark
-" Solarized
-let g:solarized_termcolors=256
-let g:solarized_contrast="high"
-colorscheme solarized
-
 " Allows transparent background
 hi Normal ctermbg=none
 
@@ -183,6 +176,13 @@ set foldmethod=manual
 set foldlevel=99
 hi Folded ctermfg=250
 hi Folded ctermbg=236
+
+" Solarized
+set t_Co=256
+set background=dark
+let g:solarized_termcolors=256
+let g:solarized_contrast="high"
+colorscheme solarized
 
 " Statusline
 set laststatus=2
@@ -369,4 +369,3 @@ autocmd FileType html,htmldjango,xml,javascript,yaml,css setlocal shiftwidth=2 t
 
 " When vimrc is edited, reload it
 autocmd! bufwritepost .vimrc source %
-

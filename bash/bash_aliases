@@ -1,6 +1,10 @@
 shopt -s expand_aliases
 
-alias ls="ls --color=auto"
+if [ "$(uname)" = "Linux" ]; then
+    alias ls="ls --color=auto --Flash"
+elif [ "$(uname)" = "Darwin" ]; then
+    alias ls="ls -GFlash"
+fi
 alias ll="ls -l"
 alias lla="ls -la"
 

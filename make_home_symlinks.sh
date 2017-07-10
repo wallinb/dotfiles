@@ -8,7 +8,7 @@ fi
 ln -s ~/dotfiles/vim/vimrc ~/.vimrc
 ln -s ~/dotfiles/nvim/init.vim ~/.config/nvim/init.vim
 
-ln -s ~/dotfiles/bash/bashrc_linux ~/.bashrc
+ln -s ~/dotfiles/bash/bashrc ~/.bashrc
 ln -s ~/dotfiles/bash/bash_profile ~/.bash_profile
 ln -s ~/dotfiles/bash/bash_aliases ~/.bash_aliases
 
