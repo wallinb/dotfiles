@@ -168,7 +168,7 @@ au BufRead,BufNewFile *.map,*.sym set filetype=mapfile
 " ##############################################################################
 
 " Allows transparent background
-hi Normal ctermbg=none
+" hi Normal ctermbg=none
 
 " Folding
 syntax enable
@@ -180,7 +180,8 @@ hi Folded ctermbg=236
 " Solarized
 set t_Co=256
 set background=dark
-let g:solarized_termcolors=256
+let g:solarized_termcolors=16  " For iterm2 if palatte set to solarized
+" let g:solarized_termcolors=256
 let g:solarized_contrast="high"
 colorscheme solarized
 
