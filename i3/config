@@ -175,18 +175,17 @@ bindsym XF86AudioMute exec amixer -q -D pulse set Master toggle
 
 assign [class="Opera"] 1
 assign [class="Remember\ The\ Milk"] 2
-assign [class="Slack"] 3
-assign [class="libprs500"] 4
+assign [class="terminal"] 3
+assign [class="calibre"] 4
 assign [class="KeePass2"] 5
+assign [class="Slack"] 8
 assign [class="Vpnui"] 9
-assign [class="Xfce4\-terminal"] 10
 
 exec_always "feh --bg-scale /home/ekpyro/Pictures/background.jpg"
-exec_always "nm-applet"
 exec_always "opera"
-exec_always "Remember\ The\ Milk"
+exec_always "/usr/bin/rememberthemilk"
 exec_always "calibre"
 exec_always "slack"
 exec_always "vpnui"
-exec_always "xfce4-terminal -e 'tmux -2'"
+exec_always "terminal -x 'tmux'"
 exec_always "keepass"

@@ -1,3 +1,4 @@
+# Setup terminal
 export TERM=xterm-256color
 export PS1="\[\e[0;32m\]\u\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;32m\]\[\e[m\] \[\e[1;37m\] \n$ "
 
@@ -6,13 +7,12 @@ export VISUAL=vim
 export EDITOR=vim
 set -o vi
 
-# RB Env
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
+# # RB Env
+# export PATH="$HOME/.rbenv/bin:$PATH"
+# eval "$(rbenv init -)"
 
-# Conda
-export PATH="$HOME/miniconda/bin:$PATH"
-eval "$(register-python-argcomplete conda)"
+# Miniconda 3
+export PATH="$HOME/miniconda3/bin:$PATH"
 
 # FZF
 # https://github.com/junegunn/fzf
@@ -21,3 +21,6 @@ eval "$(register-python-argcomplete conda)"
 # Node Version Manager
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+
+# User executables
+export PATH="$HOME/bin:$PATH"

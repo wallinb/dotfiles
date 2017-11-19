@@ -109,6 +109,7 @@ Plug 'vim-scripts/paredit.vim'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'vim-scripts/Solarized'
+Plug 'arcticicestudio/nord-vim'
 Plug 'leafgarland/typescript-vim'
 Plug 'Rykka/riv.vim'
 Plug 'Rykka/InstantRst'
@@ -178,12 +179,13 @@ hi Folded ctermfg=250
 hi Folded ctermbg=236
 
 " Solarized
-set t_Co=256
-set background=dark
-let g:solarized_termcolors=16  " For iterm2 if palatte set to solarized
+" set t_Co=256
+" set background=dark
+" let g:solarized_termcolors=16  " For iterm2 if palatte set to solarized
 " let g:solarized_termcolors=256
-let g:solarized_contrast="high"
-colorscheme solarized
+" let g:solarized_contrast="high"
+" colorscheme solarized
+colorscheme nord
 
 " Statusline
 set laststatus=2
