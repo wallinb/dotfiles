@@ -183,7 +183,7 @@ hi Folded ctermbg=236
 " let g:solarized_termcolors=256
 " let g:solarized_contrast="high"
 " colorscheme solarized
-let g:nord_uniform_diff_background=0
+let g:nord_uniform_diff_background=1
 colorscheme nord
 
 " Statusline
