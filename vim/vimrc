@@ -54,6 +54,7 @@ set title
 
 " Set line num
 set number
+set relativenumber
 
 " Height of the command bar
 set cmdheight=1
