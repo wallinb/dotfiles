@@ -296,7 +296,7 @@ set autoindent " Basic auto-indent
 set wrap
 set linebreak "Only at linebreak
 set nolist  " list disables linebreak
-set textwidth=100
+set textwidth=0
 set wrapmargin=0
 
 
@@ -351,24 +351,10 @@ vnoremap <silent> # :<C-U>
 " Auto commands
 " ##############################################################################
 
-" Trim whitespace
-function! TrimWhiteSpace()
-    %s/\s\+$//e
-endfunction
-
-" autocmd FileWritePre    * :call TrimWhiteSpace()
-" autocmd FileAppendPre   * :call TrimWhiteSpace()
-" autocmd FilterWritePre  * :call TrimWhiteSpace()
-" autocmd BufWritePre     * :call TrimWhiteSpace()
-
-" If you weren't using syntastic...for some reason
-"autocmd BufWritePost *.py call Flake8()
+autocmd FileType c,cpp,java,php,python,puppet autocmd BufWritePre <buffer> %s/\s\+$//e
 
 " Tab behavior for filetypes
 autocmd FileType html,htmldjango,xml,javascript,yaml,css setlocal shiftwidth=2 tabstop=2 softtabstop=2
-
-" Auto save on text changes
-" autocmd InsertLeave * if expand('%') != '' | update | endif
 
 " When vimrc is edited, reload it
 autocmd! bufwritepost .vimrc source %
