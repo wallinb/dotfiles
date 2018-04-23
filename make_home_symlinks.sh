@@ -6,6 +6,7 @@ if [ "${uname}" == "Darwin" ]; then
 fi
 
 ln -s ~/dotfiles/vim/vimrc ~/.vimrc
+mkdir -p ~/.config/nvim/
 ln -s ~/dotfiles/nvim/init.vim ~/.config/nvim/init.vim
 
 ln -s ~/dotfiles/bash/bashrc ~/.bashrc
@@ -14,6 +15,7 @@ ln -s ~/dotfiles/bash/bash_aliases ~/.bash_aliases
 
 ln -s ~/dotfiles/flake8rc ~/.config/flake8rc
 
+mkdir -p ~/.ipython/profile_default/
 ln -s ~/dotfiles/ipython/ipython_config.py ~/.ipython/profile_default/ipython_config.py
 
 if [ "${uname}" == "Linux" ]; then
