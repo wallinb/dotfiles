@@ -1,0 +1,1 @@
+/home/ekpyro/dotfiles/bash/bash_profile
