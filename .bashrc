@@ -7,10 +7,6 @@ export VISUAL=vim
 export EDITOR=vim
 set -o vi
 
-# # RB Env
-# export PATH="$HOME/.rbenv/bin:$PATH"
-# eval "$(rbenv init -)"
-
 # Miniconda 3
 export PATH="$HOME/miniconda3/bin:$PATH"
 
@@ -34,3 +30,6 @@ export PATH=/home/ekpyro/.local/bin:$PATH
 # For pyenv
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
+if command -v pyenv 1>/dev/null 2>&1; then
+    eval "$(pyenv init -)"
+fi
