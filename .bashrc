@@ -39,3 +39,6 @@ if [ -z "$SSH_AUTH_SOCK" ] ; then
     eval `ssh-agent -s`
     ssh-add
 fi
+
+# Setup the keyboard
+setxkbmap -model pc105 -layout us -variant dvorak -option ctrl:nocaps
