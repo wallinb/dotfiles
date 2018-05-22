@@ -64,5 +64,5 @@ Xft.lcdfilter: lcddefault
 *.color14: nord7
 *.color15: nord6
 
-URxvt.font:                       9x15
+URxvt.font:                       xft:Source Code Pro:Regular:size14
 XTerm*selectToClipboard:          true
