@@ -452,7 +452,7 @@ assign [class="terminal"] 1
 assign [class="Firefox"] 2
 assign [class="Remember\ The\ Milk"] 3
 assign [class="Slack"] 4
-assign [class="KeePass2"] 5
+assign [class="Keepassx2"] 5
 assign [class="calibre"] 6
 
 exec_always "urxvt -e 'tmux'"
