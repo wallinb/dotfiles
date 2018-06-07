@@ -2,7 +2,7 @@
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
 # Set mod key (Mod1=<Alt>, Mod4=<Super>)
-set $mod Mod1
+set $mod Mod4
 
 # set default desktop layout (default is tiling)
 # workspace_layout tabbed <stacking|stacked|tabbed>
@@ -444,20 +444,18 @@ mode "$mode_gaps_outer" {
 
 # Custom keybinds
 bindsym Mod1+Control+l exec i3lock
-bindsym XF86AudioRaiseVolume exec amixer -q set Master 2dB+ unmute
-bindsym XF86AudioLowerVolume exec amixer -q set Master 2dB- unmute
-bindsym XF86AudioMute exec amixer -q -D pulse set Master toggle
+bindsym XF86AudioRaiseVolume exec "amixer -q set Master,0 5%+ unmute"
+bindsym XF86AudioLowerVolume exec "amixer -q set Master,0 5%- unmute"
+bindsym XF86AudioMute exec "amixer -q -D pulse set Master toggle"
 
 assign [class="terminal"] 1
 assign [class="Firefox"] 2
 assign [class="Remember\ The\ Milk"] 3
 assign [class="Slack"] 4
 assign [class="Keepassx2"] 5
-assign [class="calibre"] 6
 
-exec_always "urxvt -e 'tmux'"
+exec_always "urxvt -e 'tmux new-session -s main'"
 exec_always "firefox"
 exec_always "rememberthemilk"
 exec_always "slack"
-exec_always "calibre"
 exec_always "keepassx2"
