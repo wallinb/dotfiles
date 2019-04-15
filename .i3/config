@@ -448,14 +448,16 @@ bindsym XF86AudioRaiseVolume exec "amixer -q set PCM,0 5%+ unmute"
 bindsym XF86AudioLowerVolume exec "amixer -q set PCM,0 5%- unmute"
 bindsym XF86AudioMute exec "amixer -q -D pulse set PCM toggle"
 
-assign [class="terminal"] 1
+assign [class="Termite-Main"] 1
 assign [class="Firefox"] 2
 assign [class="Remember\ The\ Milk"] 3
 assign [class="Slack"] 4
 assign [class="Keepassx2"] 5
 
-exec_always "urxvt -e 'tmux new-session -s main'"
-exec_always "firefox"
+exec_always "termite -e 'tmuxinator main' --class='Termite-Main'"
+exec_always "firefox-developer-edition"
 exec_always "rememberthemilk"
 exec_always "slack"
 exec_always "keepassx2"
+
+for_window [class="termite"] fullscreen

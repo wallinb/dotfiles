@@ -31,3 +31,5 @@ alias lsbin='echo $PATH | xargs -d: -i find {} -executable -type f'
 
 # Manage homedir config files
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree $HOME'
+alias configstat='config status -uno'
+alias pc200w='wine .wine/drive_c/Program\ Files\ \(x86\)/Campbellsci/PC200W/PC200W.exe'

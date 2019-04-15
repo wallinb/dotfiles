@@ -1,52 +1,74 @@
+# Setup aliases
+. ~/.bash_aliases
+
 # Setup terminal
-export TERM=xterm-256color
-export PS1="\[\e[0;32m\]\H\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;32m\]\[\e[m\] \[\e[1;37m\] \n$ "
+TERMINAL=termite
+TERM=xterm-256color
+PS1="\[\e[0;32m\]\H\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;32m\]\[\e[m\] \[\e[1;37m\] \n$ "
 
 # Editor
-export VISUAL=vim
-export EDITOR=vim
+VISUAL=vim
+EDITOR=vim
 set -o vi
 
+
+# avoid duplicates in history
+HISTCONTROL=ignoredups:erasedups
+# append history entries
+shopt -s histappend
+# After each command, save and reload history
+PROMPT_COMMAND="history -n; history -w; history -c; history -r; $PROMPT_COMMAND"
+
 # Miniconda 3
-export PATH="$HOME/miniconda3/bin:$PATH"
+PATH="$HOME/miniconda3/bin:$PATH"
 
 # FZF
 # https://github.com/junegunn/fzf
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 # Node Version Manager
-export NVM_DIR="$HOME/.nvm"
+NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
 
 # Go executables
-export PATH="$HOME/go/bin:$PATH"
+PATH="$HOME/go/bin:$PATH"
 
 # User executables
-export PATH="$HOME/bin:$PATH"
+PATH="$HOME/bin:$PATH"
 
 # For pipsi
-export PATH=/home/ekpyro/.local/bin:$PATH
+PATH=/home/ekpyro/.local/bin:$PATH
 
-# For pyenv
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
+# # For pyenv
+PYENV_ROOT="$HOME/.pyenv"
+PATH="$PYENV_ROOT/bin:$PATH"
 if command -v pyenv 1>/dev/null 2>&1; then
     eval "$(pyenv init -)"
 fi
 
 # For rbenv
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
+# PATH="$HOME/.rbenv/bin:$PATH"
+# eval "$(rbenv init -)"
 
-# Start ssh-agent on login
-if [ -z "$SSH_AUTH_SOCK" ] ; then
-    eval `ssh-agent -s`
+# Set default browser
+BROWSER=/usr/bin/firefox-developer-edition
+
+# Set up Node Version Manager
+source /usr/share/nvm/init-nvm.sh
+
+# Completion
+source ~/bin/tmuxinator.bash
+source  ~/bin/tmux-completion/tmux
+# Use bash-completion, if available
+[[ $PS1 && -f /usr/share/bash-completion/bash_completion ]] && \
+    . /usr/share/bash-completion/bash_completion
+
+setup_input.sh
+
+# Setup/connect to single ssh agent
+if ! pgrep -u "$USER" ssh-agent > /dev/null; then
+    ssh-agent > ~/.ssh-agent-thing
 fi
-
-# Setup the keyboard
-setxkbmap -model pc105 -layout us -variant dvorak -option ctrl:nocaps
-xinput set-prop 11 299 0  # Turn off tapping drag
-xinput set-prop 11 279 1  # Turn on natural scrolling
-
-# Detect monitor setup
-autorandr --change
+if [[ ! "$SSH_AUTH_SOCK" ]]; then
+    eval "$(<~/.ssh-agent-thing)"
+fi
