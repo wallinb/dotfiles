@@ -82,6 +82,8 @@ set ffs=unix,dos,mac
 
 set diffopt+=vertical
 
+" Increase memory limit for pattern matching
+set mmp=5000
 
 " ##############################################################################
 " Key binds
@@ -126,12 +128,18 @@ vnoremap <silent> # :<C-U>
 
 nnoremap <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
 
+nnoremap <F6> :NV<CR>
+
+nnoremap <F7> "=strftime("%c")<CR>P
+inoremap <F7> <C-R>=strftime("%c")<CR>
+
 " ##############################################################################
 " Plugins
 " ##############################################################################
 
 call plug#begin('~/.vim/plugged')
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-scriptease'
 Plug 'junegunn/gv.vim'
 Plug 'mhinz/vim-signify'
 Plug 'idanarye/vim-merginal'
@@ -148,7 +156,7 @@ Plug 'mileszs/ack.vim'
 Plug 'hynek/vim-python-pep8-indent'
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
-Plug 'davidhalter/jedi-vim'
+" Plug 'davidhalter/jedi-vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'walkermatt/vim-mapfile'
 Plug 'rodjek/vim-puppet'
@@ -163,7 +171,6 @@ Plug 'Rykka/riv.vim'
 Plug 'Rykka/InstantRst'
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
-Plug 'JamshedVesuna/vim-markdown-preview'
 Plug 'arcticicestudio/nord-vim', { 'branch': 'develop' }
 Plug 'vim-scripts/diffchar.vim'
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
@@ -173,6 +180,10 @@ Plug 'itchyny/lightline.vim'
 Plug 'ambv/black'
 Plug 'fisadev/vim-isort'
 Plug 'szymonmaszke/vimpyter'
+" Plug 'neilagabriel/vim-geeknote'
+" Plug 'fmoralesc/vim-tutor-mode'
+" Plug 'fmoralesc/vim-pad'
+Plug 'wallinb/notational-fzf-vim'
 
 call plug#end()
 
@@ -189,14 +200,6 @@ nnoremap <F4> :Twiggy<CR>
 let notes={ 'Name': 'Notes', 'path': '~/drive/notes',}
 let g:riv_projects=[notes]
 
-let vim_markdown_preview_toggle=3
-let vim_markdown_preview_pandoc=1
-" let vim_markdown_preview_browser='firefox'
-" let vim_markdown_preview_github=0
-" let vim_markdown_preview_hotkey='<c-m>'
-" let vim_markdown_preview_hotkey='<c-m>'
-" let vim_markdown_preview_browser='Google Chrome'
-
 let g:EasyClipUseSubstituteDefaults=1
 nmap M <Plug>MoveMotionEndOfLinePlug
 
@@ -207,6 +210,13 @@ autocmd Filetype ipynb nnoremap <Leader>j :VimpyterStartJupyter<CR>
 autocmd Filetype ipynb nnoremap <Leader>n :VimpyterStartNteract<CR>
 
 nnoremap <leader>, :ALENext<CR>
+
+let g:black_skip_string_normalization = 1
+
+let g:nv_search_paths = ['~/notes', './notes']
+let g:nv_local_dir = './notes'
+let g:nv_create_note_key = 'ctrl-x'
+let g:nv_create_local_note_key = 'ctrl-n'
 
 " ##############################################################################
 " Filetype
