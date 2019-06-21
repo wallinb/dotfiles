@@ -2,3 +2,4 @@ channels:
   - conda-forge
   - nsidc
   - defaults
+channel_priority: strict
