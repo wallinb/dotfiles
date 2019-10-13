@@ -373,7 +373,7 @@ bar {
 }
 
 # toggle to second monitor
-bindsym $mod+m move workspace to output up
+bindsym $mod+m move workspace to output left
 
 # Theme colors
 # class                 border      backgr.     text        indic.      child_border
@@ -449,15 +449,15 @@ bindsym XF86AudioLowerVolume exec "amixer -q set PCM,0 5%- unmute"
 bindsym XF86AudioMute exec "amixer -q -D pulse set PCM toggle"
 
 assign [class="Termite-Main"] 1
-assign [class="Firefox"] 2
+assign [class="firefoxdeveloperedition" instance="Navigator" window_role="browser"] 2
 assign [class="Remember\ The\ Milk"] 3
 assign [class="Slack"] 4
-assign [class="Keepassx2"] 5
+assign [class="Keepassxc"] 5
 
 exec_always "termite -e 'tmuxinator main' --class='Termite-Main'"
 exec_always "firefox-developer-edition"
 exec_always "rememberthemilk"
 exec_always "slack"
-exec_always "keepassx2"
+exec_always "keepassxc"
 
 for_window [class="termite"] fullscreen

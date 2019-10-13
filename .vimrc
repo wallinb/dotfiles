@@ -7,7 +7,7 @@ set shell=/bin/bash
 
 set nocompatible
 
-set clipboard=autoselect
+set clipboard=unnamedplus
 
 " Use aliases
 let $BASH_ENV="~/.bash_aliases"
@@ -139,7 +139,7 @@ inoremap <F7> <C-R>=strftime("%c")<CR>
 
 call plug#begin('~/.vim/plugged')
 Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-scriptease'
+" Plug 'tpope/vim-scriptease'
 Plug 'junegunn/gv.vim'
 Plug 'mhinz/vim-signify'
 Plug 'idanarye/vim-merginal'
@@ -183,11 +183,12 @@ Plug 'szymonmaszke/vimpyter'
 " Plug 'neilagabriel/vim-geeknote'
 " Plug 'fmoralesc/vim-tutor-mode'
 " Plug 'fmoralesc/vim-pad'
-Plug 'wallinb/notational-fzf-vim'
+" Plug 'wallinb/notational-fzf-vim'
 
 call plug#end()
 
 let g:slime_target="tmux"
+let g:slime_python_ipython = 1
 
 let g:tex_flavor='latex'
 
@@ -217,6 +218,8 @@ let g:nv_search_paths = ['~/notes', './notes']
 let g:nv_local_dir = './notes'
 let g:nv_create_note_key = 'ctrl-x'
 let g:nv_create_local_note_key = 'ctrl-n'
+
+let g:vim_isort_python_version = 'python3'
 
 " ##############################################################################
 " Filetype
