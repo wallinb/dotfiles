@@ -7,8 +7,8 @@ TERM=xterm-256color
 PS1="\[\e[0;32m\]\H\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;32m\]\[\e[m\] \[\e[1;37m\] \n$ "
 
 # Editor
-VISUAL=vim
-EDITOR=vim
+VISUAL=nvim
+EDITOR=nvim
 set -o vi
 
 
@@ -18,9 +18,6 @@ HISTCONTROL=ignoredups:erasedups
 shopt -s histappend
 # After each command, save and reload history
 PROMPT_COMMAND="history -n; history -w; history -c; history -r; $PROMPT_COMMAND"
-
-# Miniconda 3
-PATH="$HOME/miniconda3/bin:$PATH"
 
 # FZF
 # https://github.com/junegunn/fzf
@@ -46,6 +43,8 @@ if command -v pyenv 1>/dev/null 2>&1; then
     eval "$(pyenv init -)"
 fi
 
+eval "$(pyenv virtualenv-init -)"
+
 # For rbenv
 # PATH="$HOME/.rbenv/bin:$PATH"
 # eval "$(rbenv init -)"
@@ -58,7 +57,6 @@ source /usr/share/nvm/init-nvm.sh
 
 # Completion
 source ~/bin/tmuxinator.bash
-source  ~/bin/tmux-completion/tmux
 # Use bash-completion, if available
 [[ $PS1 && -f /usr/share/bash-completion/bash_completion ]] && \
     . /usr/share/bash-completion/bash_completion
@@ -73,18 +71,4 @@ if [[ ! "$SSH_AUTH_SOCK" ]]; then
     eval "$(<~/.ssh-agent-thing)"
 fi
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/wallinb/.pyenv/versions/miniconda3-latest/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/home/wallinb/.pyenv/versions/miniconda3-latest/etc/profile.d/conda.sh" ]; then
-        . "/home/wallinb/.pyenv/versions/miniconda3-latest/etc/profile.d/conda.sh"
-    else
-        export PATH="/home/wallinb/.pyenv/versions/miniconda3-latest/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-
+alias dotfiles="/usr/bin/git --git-dir=$HOME/.dotfiles.git/ --work-tree=$HOME"
