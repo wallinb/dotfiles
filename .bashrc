@@ -11,7 +11,6 @@ VISUAL=nvim
 EDITOR=nvim
 set -o vi
 
-
 # avoid duplicates in history
 HISTCONTROL=ignoredups:erasedups
 # append history entries
@@ -33,16 +32,12 @@ PATH="$HOME/go/bin:$PATH"
 # User executables
 PATH="$HOME/bin:$PATH"
 
-# For pipsi
-PATH=/home/ekpyro/.local/bin:$PATH
-
 # # For pyenv
 PYENV_ROOT="$HOME/.pyenv"
 PATH="$PYENV_ROOT/bin:$PATH"
 if command -v pyenv 1>/dev/null 2>&1; then
     eval "$(pyenv init -)"
 fi
-
 eval "$(pyenv virtualenv-init -)"
 
 # For rbenv
@@ -57,6 +52,7 @@ source /usr/share/nvm/init-nvm.sh
 
 # Completion
 source ~/bin/tmuxinator.bash
+
 # Use bash-completion, if available
 [[ $PS1 && -f /usr/share/bash-completion/bash_completion ]] && \
     . /usr/share/bash-completion/bash_completion
@@ -70,5 +66,3 @@ fi
 if [[ ! "$SSH_AUTH_SOCK" ]]; then
     eval "$(<~/.ssh-agent-thing)"
 fi
-
-alias dotfiles="/usr/bin/git --git-dir=$HOME/.dotfiles.git/ --work-tree=$HOME"
