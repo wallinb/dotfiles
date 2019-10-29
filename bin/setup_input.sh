@@ -11,3 +11,6 @@ setxkbmap -model pc105 -layout us -variant dvorak -option ctrl:nocaps
 
 # Detect monitor setup
 autorandr --change
+
+# Speed up  keyboard repeat
+xset r rate 190 35

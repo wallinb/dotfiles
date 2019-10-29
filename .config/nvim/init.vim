@@ -309,9 +309,6 @@ command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 " use `:OR` for organize import of current buffer
 command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
 
-" Add status line support, for integration with other plugin, checkout `:h coc-status`
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-
 " Using CocList
 " Show all diagnostics
 nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
@@ -355,10 +352,13 @@ colorscheme nord
 
 " Statusline
 set laststatus=2
-set statusline=\ %F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ Col:\ %c
-set statusline+=\ %{fugitive#statusline()}
-set statusline+=\ %#warningmsg#
-set statusline+=\ %*
+" set statusline=\ %F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ Col:\ %c
+" set statusline+=\ %{fugitive#statusline()}
+" set statusline+=\ %#warningmsg#
+" set statusline+=\ %*
+" " Add status line support, for integration with other plugin, checkout `:h coc-status`
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
 
 function! MyFoldText()
     let line=getline(v:foldstart)
