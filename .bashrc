@@ -66,3 +66,9 @@ fi
 if [[ ! "$SSH_AUTH_SOCK" ]]; then
     eval "$(<~/.ssh-agent-thing)"
 fi
+
+# For ibus
+export GTK_IM_MODULE=ibus
+export QT4_IM_MODULE=xim
+export QT_IM_MODULE=xim
+export XMODIFIERS=@im=ibus
