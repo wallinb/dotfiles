@@ -13,4 +13,4 @@ setxkbmap -model pc105 -layout us -variant dvorak -option ctrl:nocaps
 autorandr --change
 
 # Speed up  keyboard repeat
-xset r rate 190 35
+xset r rate 300 55
