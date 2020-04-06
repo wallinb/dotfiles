@@ -456,8 +456,8 @@ assign [class="Keepassxc"] 5
 
 exec_always "termite -e 'tmuxinator main' --class='Termite-Main'"
 exec_always "firefox-developer-edition"
-exec_always "rememberthemilk"
-exec_always "slack"
+exec_always "rememberthemilk --disable-gui"
+exec_always "slack --disable-gui"
 exec_always "keepassxc"
 
 for_window [class="termite"] fullscreen
