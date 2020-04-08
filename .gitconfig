@@ -1,0 +1,5 @@
+[user]
+	email = bruce.wallin@nsidc.org
+	name = Bruce Wallin
+[alias]
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
