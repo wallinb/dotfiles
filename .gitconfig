@@ -1,0 +1,7 @@
+[user]
+	email = bruce.wallin@nsidc.org
+	name = Bruce Wallin
+[core]
+	editor = vim
+[url "git@github.com:"]
+	insteadOf = https://github.com/
