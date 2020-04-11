@@ -187,7 +187,7 @@ Plug 'arcticicestudio/nord-vim', { 'branch': 'develop' }
 " Plug 'ryanoasis/vim-devicons'
 " Plug 'mhinz/vim-startify'
 " Plug 'itchyny/lightline.vim'
-Plug 'ambv/black'
+Plug 'psf/black', { 'tag': '19.10b0' }
 Plug 'fisadev/vim-isort'
 " Plug 'szymonmaszke/vimpyter'
 " Plug 'neilagabriel/vim-geeknote'
