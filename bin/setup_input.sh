@@ -13,8 +13,5 @@ setxkbmap -model pc105 -layout us -variant dvorak -option ctrl:nocaps
 # Set secondary keyboard
 # setxkbmap -device 17 -model pc105 -layout us -variant dvorak -option ctrl:nocaps
 
-# Detect monitor setup
-autorandr --change
-
 # Speed up  keyboard repeat
 xset r rate 300 55
