@@ -452,12 +452,14 @@ assign [class="Termite-Main"] 1
 assign [class="firefoxdeveloperedition" instance="Navigator" window_role="browser"] 2
 assign [class="Remember\ The\ Milk"] 3
 assign [class="Slack"] 4
-assign [class="keepassxc"] 5
+assign [class="KeePassXC"] 5
+assign [class="Spotify"] 6
 
 exec_always "termite -e 'tmuxinator main' --class='Termite-Main'"
 exec_always "firefox-developer-edition"
-exec_always "rememberthemilk --disable-gui"
-exec_always "slack --disable-gui"
+exec_always "rememberthemilk --disable-gpu"
+exec_always "slack --disable-gpu"
 exec_always "keepassxc"
+exec_always "spotify"
 
 for_window [class="termite"] fullscreen
