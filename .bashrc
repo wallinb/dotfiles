@@ -45,7 +45,7 @@ eval "$(pyenv virtualenv-init -)"
 # eval "$(rbenv init -)"
 
 # Set default browser
-BROWSER=/usr/bin/firefox
+BROWSER=/usr/bin/firefox-developer-edition
 
 # Set up Node Version Manager
 source /usr/share/nvm/init-nvm.sh
@@ -56,8 +56,6 @@ source ~/bin/tmuxinator.bash
 # Use bash-completion, if available
 [[ $PS1 && -f /usr/share/bash-completion/bash_completion ]] && \
     . /usr/share/bash-completion/bash_completion
-
-setup_input.sh
 
 # Setup/connect to single ssh agent
 if ! pgrep -u "$USER" ssh-agent > /dev/null; then
@@ -72,3 +70,4 @@ export GTK_IM_MODULE=ibus
 export QT4_IM_MODULE=xim
 export QT_IM_MODULE=xim
 export XMODIFIERS=@im=ibus
+export GIT_INTERNAL_GETTEXT_TEST_FALLBACKS=1 # fixes emacs gettext issue

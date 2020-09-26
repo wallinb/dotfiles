@@ -187,8 +187,6 @@ Plug 'arcticicestudio/nord-vim', { 'branch': 'develop' }
 " Plug 'ryanoasis/vim-devicons'
 " Plug 'mhinz/vim-startify'
 " Plug 'itchyny/lightline.vim'
-Plug 'psf/black', { 'tag': '19.10b0' }
-Plug 'fisadev/vim-isort'
 " Plug 'szymonmaszke/vimpyter'
 " Plug 'neilagabriel/vim-geeknote'
 " Plug 'fmoralesc/vim-tutor-mode'
@@ -216,8 +214,6 @@ nmap M <Plug>MoveMotionEndOfLinePlug
 let g:ackprg = 'ag --nogroup --nocolor --column'
 
 " nnoremap <leader>, :ALENext<CR>
-
-let g:black_skip_string_normalization = 1
 
 let g:vim_isort_python_version = 'python3'
 
@@ -446,13 +442,8 @@ set wrapmargin=0
 " Auto commands
 " ##############################################################################
 
-autocmd FileType c,cpp,java,php,python,puppet autocmd BufWritePre <buffer> %s/\s\+$//e
-
 " Tab behavior for filetypes
 autocmd FileType html,htmldjango,xml,javascript,yaml,css setlocal shiftwidth=2 tabstop=2 softtabstop=2
 
-" Run Black when writing python code
-autocmd BufWritePre *.py execute ':Black'
-
-" Run isort when writing python code
-autocmd BufWritePre *.py execute ':Isort'
+" Delete extra trailing space
+autocmd FileType c,cpp,java,php,python,puppet autocmd BufWritePre <buffer> %s/\s\+$//e
