@@ -448,18 +448,21 @@ bindsym XF86AudioRaiseVolume exec "amixer -q set PCM,0 5%+ unmute"
 bindsym XF86AudioLowerVolume exec "amixer -q set PCM,0 5%- unmute"
 bindsym XF86AudioMute exec "amixer -q -D pulse set PCM toggle"
 
-assign [class="Termite-Main"] 1
+assign [class="Emacs"] 1
 assign [class="firefoxdeveloperedition" instance="Navigator" window_role="browser"] 2
 assign [class="Remember\ The\ Milk"] 3
 assign [class="Slack"] 4
 assign [class="KeePassXC"] 5
 assign [class="Spotify"] 6
+assign [class="Termite-Main"] 8
 
-exec_always "termite -e 'tmuxinator main' --class='Termite-Main'"
+exec_always "emacs"
 exec_always "firefox-developer-edition"
 exec_always "rememberthemilk --disable-gpu"
 exec_always "slack --disable-gpu"
 exec_always "keepassxc"
 exec_always "spotify"
+exec_always "termite -e 'tmuxinator main' --class='Termite-Main'"
+exec_always "/home/wallinb/bin/input.sh"
 
 for_window [class="termite"] fullscreen
