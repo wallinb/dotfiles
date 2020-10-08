@@ -138,8 +138,6 @@ vnoremap <silent> # :<C-U>
 
 nnoremap <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
 
-nnoremap <F6> :NV<CR>
-
 nnoremap <F7> "=strftime("%c")<CR>P
 inoremap <F7> <C-R>=strftime("%c")<CR>
 
@@ -194,6 +192,8 @@ Plug 'arcticicestudio/nord-vim', { 'branch': 'develop' }
 " Plug 'wallinb/notational-fzf-vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'lervag/vimtex'
+Plug 'SidOfc/mkdx'
+Plug 'preservim/nerdtree'
 
 call plug#end()
 
@@ -323,6 +323,17 @@ nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
+let g:mkdx#settings = { 'highlight': { 'enable': 1 },
+                    \ 'enter': { 'enable': 1 , 'shift': 1 },
+                    \ 'links': { 'external': { 'enable': 1 } },
+                    \ 'toc': { 'text': 'Table of Contents', 'update_on_write': 1 },
+                    \ 'fold': { 'enable': 1 } }
+
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
+
+map <F6> :NERDTreeToggle<CR>
+
 " ##############################################################################
 " Filetype
 " ##############################################################################
@@ -335,6 +346,10 @@ au BufRead,BufNewFile *.map,*.sym set filetype=mapfile
 
 " Allows transparent background
 " hi Normal ctermbg=none
+
+" Set whether to apply formatting markdown to text (italic etc...)
+" Note: not formatting -- perhaps font issue?
+" set conceallevel=2
 
 " Folding
 syntax enable
