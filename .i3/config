@@ -457,6 +457,7 @@ assign [class="Spotify"] 6
 assign [class="Termite-Main"] 8
 
 exec_always "emacs"
+exec_always "dropbox"
 exec_always "firefox-developer-edition"
 exec_always "rememberthemilk --disable-gpu"
 exec_always "slack --disable-gpu"
