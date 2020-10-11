@@ -1,0 +1,126 @@
+#+title: Spacemacs Configuration
+#+description: Org structured configuration for spacemacs
+#+STARTUP: overview
+* General
+#+BEGIN_SRC emacs-lisp :tangle user-config.el
+;; wrap line by default
+(global-visual-line-mode 1)
+
+;; Familiar zooming with Ctrl+ and Ctrl-
+(define-key global-map (kbd "C-+") 'text-scale-increase)
+(define-key global-map (kbd "C--") 'text-scale-decrease)
+#+END_SRC
+* Startup
+#+BEGIN_SRC emacs-lisp :tangle user-config.el
+;; open main org file on startup
+(find-file "~/Dropbox/org/main.org") 
+;; open agenda on startup
+(with-eval-after-load 'org (org-agenda nil "a"))
+#+END_SRC
+* Org-mode
+** Locations
+#+BEGIN_SRC emacs-lisp :tangle user-config.el
+(with-eval-after-load 'org 
+  (setq org-agenda-files (quote ("~/Dropbox/org")))
+  (setq org-directory "~/Dropbox/org")
+  (setq org-default-notes-file (concat org-directory "/inbox.org"))
+  (setq-default dotspacemacs-configuration-layers
+                '((org :variables org-projectile-file "TODOs.org"))))
+#+END_SRC
+** Behavior
+#+BEGIN_SRC emacs-lisp :tangle user-config.el
+(with-eval-after-load 'org
+  ;; Autosave
+  (add-hook 'auto-save-hook 'org-save-all-org-buffers)
+
+  ;; Not sure -- set 't' to change status in org-todo list?
+  (setq org-use-fast-todo-selection t)
+
+  ;; Setup todo states
+  ;; TODO Keywords
+  (setq org-todo-keywords
+        (quote ((sequence "TODO(t)" "IN_PROGRESS(i)" "|" "DONE(d)")
+                (sequence "WAITING(w@/)" "HOLD(h@/)" "|" "CANCELLED(c@/)"))))
+
+  ;; Avoid setting entries as DONE when there are still sub-entries that are not
+  ;; DONE.
+  (setq org-enforce-todo-dependencies t)
+
+  ;; When hitting alt-return on a header, please create a new one without
+  ;; messing up the one I'm standing on.
+  (setq org-insert-heading-respect-content t)
+
+  ;; Keep the indentation well structured by. OMG this is a must have. Makes
+  ;; it feel less like editing a big text file and more like a purpose built
+  ;; editor for org mode that forces the indentation. (Might be default in spacemacs?)
+  (setq org-startup-indented t))
+#+END_SRC
+* RTM Import
+#+BEGIN_SRC emacs-lisp :tangle user-config.el
+(defun org-feed-parse-RTM-entry (entry)
+  "Parse the `:item-full-text' as a sexp and create new properties."
+  (let ((xml (car (read-from-string (plist-get entry :item-full-text)))))
+    ;; Get first <link href='foo'/>.
+    (setq entry (plist-put entry :link
+                           (xml-get-attribute
+                            (car (xml-get-children xml 'link))
+                            'href)))
+    ;; Add <title/> as :title.
+    (setq entry (plist-put entry :title
+                           (xml-substitute-special
+                            (car (xml-node-children
+                                  (car (xml-get-children xml 'title)))))))
+    ;; look for some other information that's in the content of the entry
+    ;; the structure looks something like:
+    ;; <content><div>   <div item> <span itemname></span><span itemvalue></span></div>...
+    (let* ((content (car (xml-get-children xml 'content)))
+           (main  (car (xml-get-children content 'div)))
+           (items (xml-get-children main 'div)))
+      (when items
+        ; iterate over all items and check for certain classes
+        (while items
+          (setq item (car items))
+          ; get the second span entry
+          (setq valuesub (car (cdr (xml-node-children item))))
+             (cond
+              ((string= (xml-get-attribute item 'class) "rtm_due")
+               (setq entry (plist-put entry :due (car (xml-node-children valuesub))))
+               (setq mydate (car (xml-node-children valuesub)))
+               ;; Any time will be stripped
+               ;; Entries will be only schedued to a date
+               (if (string= mydate "never")
+                   nil
+                   ;; entries could be scheduled to a date "Tue 4 Aug 15" 
+                   ;; or to a date/time "Tue 4 Aug 15 at 10:00AM"
+                   (if (string-match "^\\([a-zA-Z]*\\) \\([0-9]*\\) \\([a-zA-Z]*\\) \\([0-9]*\\) at \\([0-9:]*\\)" mydate)
+                       (setq mydate (concat "20" (match-string 4 mydate) " " (match-string 3 mydate) " " (match-string 2 mydate) " " (match-string 5 mydate) ":01"))
+                     (progn
+                       (string-match "^\\([a-zA-Z]*\\) \\([0-9]*\\) \\([a-zA-Z]*\\) \\([0-9]*\\)$" mydate)
+                       (setq mydate (concat "20" (match-string 4 mydate) " " (match-string 3 mydate) " " (match-string 2 mydate) " 00:00:01"))))
+                 (progn
+                  (setq mydate (parse-time-string mydate))
+                  (setq mydate (apply #'encode-time mydate))
+                  (setq mydate (format-time-string (car org-time-stamp-formats) mydate))
+                  (setq entry (plist-put entry :dueorgformat mydate)))))
+              ((string= (xml-get-attribute item 'class) "rtm_tags")
+               (setq entry (plist-put entry :tags (car (xml-node-children valuesub)))))
+              ((string= (xml-get-attribute item 'class) "rtm_time_estimate")
+               (setq entry (plist-put entry :timeestimate (car (xml-node-children valuesub)))))
+              ((string= (xml-get-attribute item 'class) "rtm_priority")
+               (setq entry (plist-put entry :priority (car (xml-node-children valuesub)))))
+              ((string= (xml-get-attribute item 'class) "rtm_location")
+               (setq entry (plist-put entry :location (car (xml-node-children valuesub))))))
+          (setq items (cdr items))
+          )))
+    entry))
+
+(setq org-feed-alist
+      '(("Remember The Milk"
+"https://www.rememberthemilk.com/atom/ekpyro/?tok=eJwNyjsOAkEIANATTQIsn6G030swMCRGE43aeHt99UN3RVBfXJwHMViuychLymUWmabSjNldC5qEZwio2S77361j357f12Pcr*-PuJznyO1WoQ2FbuLUGJzl7bSyM1swlkpAeRy*YGJrQCqnRkpQ-ABv7ylb"
+         "~/Dropbox/org/RTM.org"
+         "Remember The Milk"
+         :parse-feed org-feed-parse-atom-feed
+         :parse-entry org-feed-parse-RTM-entry
+         :template "* TODO %title\n SCHEDULED:%dueorgformat\n Due: %due\n Location: %location\n Priority:%priority\n Tags:%tags\n %a\n ")))
+#+END_SRC
+
