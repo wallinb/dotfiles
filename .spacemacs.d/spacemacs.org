@@ -55,3 +55,13 @@
   ;; editor for org mode that forces the indentation. (Might be default in spacemacs?)
   (setq org-startup-indented t))
 #+END_SRC
+** Agenda View
+#+BEGIN_SRC emacs-lisp :tangle user-config.el
+(with-eval-after-load 'org
+
+  ;; Default to follow mode in agenda view 
+  (setq org-agenda-start-with-follow-mode t)
+
+  ;; Default to follow mode in agenda view 
+  (setq org-agenda-start-on-weekday 7))
+#+END_SRC
