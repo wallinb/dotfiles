@@ -27,33 +27,35 @@
   (setq-default dotspacemacs-configuration-layers
                 '((org :variables org-projectile-file "TODOs.org"))))
 #+END_SRC
-** Behavior
+** General
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
-(with-eval-after-load 'org
-  ;; Autosave
-  (add-hook 'auto-save-hook 'org-save-all-org-buffers)
+  (with-eval-after-load 'org
+    ;; Autosave
+    (add-hook 'auto-save-hook 'org-save-all-org-buffers)
 
-  ;; Not sure -- set 't' to change status in org-todo list?
-  (setq org-use-fast-todo-selection t)
+    ;; Not sure -- set 't' to change status in org-todo list?
+    (setq org-use-fast-todo-selection t)
 
-  ;; Setup todo states
-  ;; TODO Keywords
-  (setq org-todo-keywords
-        (quote ((sequence "TODO(t)" "IN_PROGRESS(i)" "|" "DONE(d)")
-                (sequence "WAITING(w@/)" "HOLD(h@/)" "|" "CANCELLED(c@/)"))))
+    ;; Setup todo states
+    ;; TODO Keywords
+    (setq org-todo-keywords
+          (quote ((sequence "TODO(t)" "IN_PROGRESS(i)" "|" "DONE(d)")
+                  (sequence "WAITING(w@/)" "HOLD(h@/)" "|" "CANCELLED(c@/)"))))
 
-  ;; Avoid setting entries as DONE when there are still sub-entries that are not
-  ;; DONE.
-  (setq org-enforce-todo-dependencies t)
+    ;; Avoid setting entries as DONE when there are still sub-entries that are not
+    ;; DONE.
+    ;; Might be causing hangs when changing status in agenda view. Commenting out for now.
+    (setq org-enforce-todo-dependencies f)
+    (setq org-enforce-todo-checkbox-dependencies f)
 
-  ;; When hitting alt-return on a header, please create a new one without
-  ;; messing up the one I'm standing on.
-  (setq org-insert-heading-respect-content t)
+    ;; When hitting alt-return on a header, please create a new one without
+    ;; messing up the one I'm standing on.
+    (setq org-insert-heading-respect-content t)
 
-  ;; Keep the indentation well structured by. OMG this is a must have. Makes
-  ;; it feel less like editing a big text file and more like a purpose built
-  ;; editor for org mode that forces the indentation. (Might be default in spacemacs?)
-  (setq org-startup-indented t))
+    ;; Keep the indentation well structured by. OMG this is a must have. Makes
+    ;; it feel less like editing a big text file and more like a purpose built
+    ;; editor for org mode that forces the indentation. (Might be default in spacemacs?)
+    (setq org-startup-indented t))
 #+END_SRC
 ** Agenda View
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
@@ -62,6 +64,14 @@
   ;; Default to follow mode in agenda view 
   (setq org-agenda-start-with-follow-mode t)
 
-  ;; Default to follow mode in agenda view 
+  ;; Start week on Sunday
   (setq org-agenda-start-on-weekday 7))
 #+END_SRC
+** Clock
+#+BEGIN_SRC emacs-lisp :tangle user-config.el
+(with-eval-after-load 'org
+  (require 'org-clock)
+  (setq org-clock-persist t)
+  (org-clock-persistence-insinuate))
+#+END_SRC
+
