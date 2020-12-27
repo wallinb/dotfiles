@@ -1,6 +1,7 @@
-#+title: Spacemacs Configuration
-#+description: Org structured configuration for spacemacs
-#+STARTUP: overview
+#+title: Emacs Configuration
+#+description: Configuration org-file which gets tangled to generate user-config.el
+#+startup: overview
+
 * General
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
 ;; wrap line by default
@@ -9,64 +10,120 @@
 ;; Familiar zooming with Ctrl+ and Ctrl-
 (define-key global-map (kbd "C-+") 'text-scale-increase)
 (define-key global-map (kbd "C--") 'text-scale-decrease)
-#+END_SRC
-* Startup
-#+BEGIN_SRC emacs-lisp :tangle user-config.el
+
+;; This combination makes splitting horizontally more likely...don't ask me how
+(setq split-width-threshold 1)
+(setq split-height-threshold nil)
+
+;; Prevent paren madness
+(setq show-paren-mode t)
+(setq show-paren-style 'expression)
+
 ;; open main org file on startup
-(find-file "~/Dropbox/org/main.org") 
+;; (find-file "~/Dropbox/org/main.org") 
 ;; open agenda on startup
-(with-eval-after-load 'org (org-agenda nil "a"))
+;; (with-eval-after-load 'org (org-agenda nil "a"))
 #+END_SRC
-* Org-mode
+
+* Org
 ** Locations
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
-(with-eval-after-load 'org 
-  (setq org-agenda-files (quote ("~/Dropbox/org")))
-  (setq org-directory "~/Dropbox/org")
-  (setq org-default-notes-file (concat org-directory "/inbox.org"))
-  (setq-default dotspacemacs-configuration-layers
-                '((org :variables org-projectile-file "TODOs.org"))))
+ (with-eval-after-load 'org 
+   ;; Collect all .org from my Org directory and subdirs
+   (setq org-agenda-file-regexp "\\`[^.].*\\.org\\'") ; default value
+   (defun load-org-agenda-files-recursively (dir) "Find all directories in DIR."
+          (unless (file-directory-p dir) (error "Not a directory `%s'" dir))
+          (unless (equal (directory-files dir nil org-agenda-file-regexp t) nil)
+            (add-to-list 'org-agenda-files dir)
+            )
+          (dolist (file (directory-files dir nil nil t))
+            (unless (member file '("." ".."))
+              (let ((file (concat dir file "/")))
+                (when (file-directory-p file)
+                  (load-org-agenda-files-recursively file)
+                  )
+                )
+              )
+            )
+          )
+   (load-org-agenda-files-recursively "~/Dropbox/org/" ) ; trailing slash required
+
+   (setq org-refile-targets
+         '((nil :maxlevel . 3)
+           (org-agenda-files :maxlevel . 1)))
+
+   (setq org-directory "~/Dropbox/org")
+   (setq org-default-notes-file (concat org-directory "/inbox.org"))
+   (setq-default dotspacemacs-configuration-layers
+                 '((org :variables org-projectile-file "TODOs.org"))))
 #+END_SRC
-** General
-#+BEGIN_SRC emacs-lisp :tangle user-config.el
-  (with-eval-after-load 'org
-    ;; Autosave
-    (add-hook 'auto-save-hook 'org-save-all-org-buffers)
-
-    ;; Not sure -- set 't' to change status in org-todo list?
-    (setq org-use-fast-todo-selection t)
-
-    ;; Setup todo states
-    ;; TODO Keywords
-    (setq org-todo-keywords
-          (quote ((sequence "TODO(t)" "IN_PROGRESS(i)" "|" "DONE(d)")
-                  (sequence "WAITING(w@/)" "HOLD(h@/)" "|" "CANCELLED(c@/)"))))
-
-    ;; Avoid setting entries as DONE when there are still sub-entries that are not
-    ;; DONE.
-    ;; Might be causing hangs when changing status in agenda view. Commenting out for now.
-    (setq org-enforce-todo-dependencies f)
-    (setq org-enforce-todo-checkbox-dependencies f)
-
-    ;; When hitting alt-return on a header, please create a new one without
-    ;; messing up the one I'm standing on.
-    (setq org-insert-heading-respect-content t)
-
-    ;; Keep the indentation well structured by. OMG this is a must have. Makes
-    ;; it feel less like editing a big text file and more like a purpose built
-    ;; editor for org mode that forces the indentation. (Might be default in spacemacs?)
-    (setq org-startup-indented t))
-#+END_SRC
-** Agenda View
+                
+** Setup
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
 (with-eval-after-load 'org
+  ;; Autosave regularly
+  (add-hook 'auto-save-hook 'org-save-all-org-buffers)
+
+  ;; Not sure -- set 't' to change status in org-todo list?
+  (setq org-use-fast-todo-selection t)
+
+  ;; Setup todo states
+  ;; letter means indicator/keystroke
+  ;; left/right of slash @ means take note when entering/leaving
+  ;; lef/right of slash ! means record timestamp when entering/leaving state
+  (setq org-todo-keywords
+        (quote ((sequence "SOMEDAY(s)" "TODO(t)" "NEXT(n)" "IN_PROGRESS(i!)" "WAITING(w@)" "HOLD(h@)" "|" "DONE(d!)" "CANCELLED(c@)")
+                (sequence "REPEAT(r)" "|" "DONE(d!)"))))
+
+  ;; Set entries as DONE when there are still sub-entries that are not DONE
+  (setq org-enforce-todo-dependencies t)
+  (setq org-enforce-todo-checkbox-dependencies t)
+
+  ;; When hitting alt-return on a header, please create a new one without
+  ;; messing up the one I'm standing on.
+  (setq org-insert-heading-respect-content t)
+
+  ;; Keep the indentation well structured by. OMG this is a must have. Makes
+  ;; it feel less like editing a big text file and more like a purpose built
+  ;; editor for org mode that forces the indentation. (Might be default in spacemacs?)
+  (setq org-startup-indented t)
+
+  ;; Attachments are inherited
+  (setq org-attach-use-inheritance t)
+
+  ;; Log and clock into respectie drawers
+  (setq org-log-into-drawer t)
+  (setq org-clock-into-drawer "CLOCKING")
+
+  ;; Log reschedules to drawer 
+  (setq org-log-reschedule (quote time))
+  (setq org-log-done nil))
+#+END_SRC
+  
+** Agenda
+#+BEGIN_SRC emacs-lisp :tangle user-config.el
+(with-eval-after-load 'org
+  ;; Set agenda view formatting
+  (setq org-agenda-breadcrumbs-separator "/")
+  (setq org-agenda-prefix-format '((agenda . " %i %-12:c%?-12t% s %b")
+                                   (timeline . "  % s")
+                                   (todo .
+                                         " %i %-12:c %b")
+                                   (tags .
+                                         " %i %-12:c %b")
+                                   (search . " %i %-12:c")))
 
   ;; Default to follow mode in agenda view 
   (setq org-agenda-start-with-follow-mode t)
 
+  ;; Move habit graph to right
+  (setq org-habit-graph-column 88)
+
   ;; Start week on Sunday
   (setq org-agenda-start-on-weekday 7))
 #+END_SRC
+  
+
 ** Clock
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
 (with-eval-after-load 'org
@@ -75,3 +132,47 @@
   (org-clock-persistence-insinuate))
 #+END_SRC
 
+** Calender
+#+BEGIN_SRC emacs-lisp :tangle user-config.el
+(with-eval-after-load 'org
+  (setq org-gcal-file-alist '(("broose33@gmail.com" . "~/Dropbox/org/gcal.org")))
+  (setq calendar-week-start-day 1)
+  (add-hook 'org-capture-after-finalize-hook 'google-calendar/sync-cal-after-capture)
+  (setq cfw:org-capture-template '("s" "Scedule an event" entry
+                                   (file "~/Dropbox/org/gcal.org")
+                                   "* %^{Description}\n%^{LOCATION}p\n%(cfw:org-capture-day)\n%?")))
+#+END_SRC
+
+** Capturing
+#+BEGIN_SRC emacs-lisp :tangle user-config.el
+          (with-eval-after-load 'org
+            (setq org-capture-templates
+                  (quote
+                   (("j" "Journal entry" entry
+                     (file+olp+datetree"~/Dropbox/org/journal.org") "* %U - %^{Activity}")
+                    ("b" "Add book to read" entry
+                     (file+headline "~/Dropbox/org/books.org" "Books to read")
+                     (file "~/Dropbox/org/tpl-book.txt") :empty-lines-after 2)
+                    ("t" "Todo entry" entry
+                     (file "~/Dropbox/org/inbox.org")
+                     (file "~/Dropbox/org/tpl-todo.txt"))
+                    ("g" "Goal entry" entry
+                     (file "~/Dropbox/org/goals.org")
+                     (file "~/Dropbox/org/tpl-goal.txt"))))))
+#+END_SRC
+
+** Babel
+#+BEGIN_SRC emacs-lisp :tangle user-config.el
+  (with-eval-after-load 'org
+    (setq org-babel-load-languages
+          '((python . t)
+            (js . t)
+            (emacs-lisp . t)
+            (shell . t)
+            (dot . t))))
+#+END_SRC
+* Chinese
+#+BEGIN_SRC emacs-lisp :tangle user-config.el
+  (require 'pyim-basedict)
+  (pyim-basedict-enable)
+#+END_SRC
