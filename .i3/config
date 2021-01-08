@@ -4,6 +4,12 @@
 # Set mod key (Mod1=<Alt>, Mod4=<Super>)
 set $mod Mod1
 
+# Set passthrough mode with alt+alt to allow alt use in e.g. emacs
+mode "passthrough" {
+    bindsym Mod1+Alt_L mode "default"
+}
+bindsym Mod1+Alt_L mode "passthrough"
+
 # set default desktop layout (default is tiling)
 # workspace_layout tabbed <stacking|stacked|tabbed>
 
