@@ -18,9 +18,6 @@
   ;; Prevent paren madness
   (setq show-paren-mode t)
   (setq show-paren-style 'expression)
-
-  ;; Delete trailing whitespace on save
-  (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+END_SRC
 
 * Org
@@ -55,9 +52,7 @@
     ;; Enable org-refile accross files
     (setq org-refile-targets
           '((nil :maxlevel . 3)
-            (org-agenda-files :maxlevel . 1)))
-
-    )
+            (org-agenda-files :maxlevel . 1))))
 #+END_SRC
 
 ** General
@@ -74,17 +69,14 @@
     ;; left/right of slash @ means take note when entering/leaving
     ;; lef/right of slash ! means record timestamp when entering/leaving state
     (setq org-todo-keywords
-          (quote ((sequence "SOMEDAY(s)" "TODO(t)" "NEXT(n)" "IN_PROGRESS(i!)" "WAITING(w@)" "HOLD(h@)" "|" "DONE(d!)" "CANCELLED(c@)")
+          (quote ((sequence "TODO(t)" "NEXT(n)" "IN_PROGRESS(i!)" "WAITING(w@)" "HOLD(h@)" "|" "DONE(d!)" "CANCELLED(c@)")
                   (sequence "REPEAT(r)" "|" "DONE(d!)"))))
     (setq org-todo-keyword-faces
           '(("TODO" . "dodger blue") ("IN_PROGRESS" . "tomato") ("REPEAT" . "turquoise") ("WAITING" . "slate blue") ("CANCELED" . "dim gray") ("DONE" . "forest green")))
 
-    ;; Don't alter foreground for blocked items in agenda
-    (set-face-foreground 'org-agenda-dimmed-todo-face nil)
-
-    ;; Set entries as DONE when there are still sub-entries that are not DONE
-    (setq org-enforce-todo-dependencies t)
-    (setq org-enforce-todo-checkbox-dependencies t)
+    ;; Turn off dependency enforcement (seems to cause crashes frequently)
+    (setq org-enforce-todo-dependencies nil)
+    (setq org-enforce-todo-checkbox-dependencies nil)
 
     ;; When hitting alt-return on a header, please create a new one without
     ;; messing up the one I'm standing on.
@@ -100,7 +92,6 @@
 
     ;; Log and clock into respectie drawers
     (setq org-log-into-drawer t)
-    (setq org-clock-into-drawer "CLOCKING")
 
     ;; Log reschedules to drawer
     (setq org-log-reschedule (quote time))
@@ -109,75 +100,102 @@
 
 ** Agenda
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
-(with-eval-after-load 'org
-  ;; Set agenda view formatting
-  (setq org-agenda-breadcrumbs-separator "/")
-  (setq org-agenda-prefix-format '((agenda . " %i %-12:c%?-12t% s %b")
-                                   (timeline . "  % s")
-                                   (todo .
-                                         " %i %-12:c %b")
-                                   (tags .
-                                         " %i %-12:c %b")
-                                   (search . " %i %-12:c")))
+  (with-eval-after-load 'org
+    ;; Set agenda view formatting
+    (setq org-agenda-breadcrumbs-separator "/")
+    (setq org-agenda-prefix-format '((agenda . " %i %-12:c%?-12t% s %b")
+                                     (timeline . "  % s")
+                                     (todo . " %i %-12:c %b")
+                                     (tags . " %i %-12:c %b")
+                                     (search . " %i %-12:c")))
 
-  ;; Default to follow mode in agenda view
-  (setq org-agenda-start-with-follow-mode t)
+    ;; Default to follow mode in agenda view
+    (setq org-agenda-start-with-follow-mode t)
 
-  ;; Move habit graph to right
-  (setq org-habit-graph-column 88)
+    ;; Habit options
+    (setq org-habit-graph-column 83)
+    (setq org-habit-show-habits-only-for-today t)
+    (setq org-habit-preceding-days 30)
+    (setq org-habit-following-days 3)
 
-  ;; Start week on Sunday
-  (setq org-agenda-start-on-weekday 7))
+    ;; Don't alter foreground for blocked items in agenda
+    (set-face-foreground 'org-agenda-dimmed-todo-face nil)
+
+    ;; Start week on Sunday
+    (setq org-agenda-start-on-weekday 7)
+
+    ;; Super agenda
+    (org-super-agenda-mode)
+    (setq org-super-agenda-groups
+          '( ;; Each group has an implicit boolean OR operator between its selectors.
+            (:name "Today"          ; Optionally specify section name
+                   :time-grid t     ; Items that appear on the time grid
+                   :order 0)
+            (:name "Work" :category "work" :order 1)
+            (:name "Habits" :habit t :order 10)
+            (:auto-category t :order 2)
+            )))
 #+END_SRC
 
 
 ** Clock
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
-(with-eval-after-load 'org
-  (require 'org-clock)
-  (setq org-clock-persist t)
-  (org-clock-persistence-insinuate))
+  (with-eval-after-load 'org
+    (require 'org-clock)
+    (setq org-clock-into-drawer "CLOCKING")
+
+    (setq org-clock-total-time-cell-format "%s")
+    (setq org-duration-format 'h:mm)
+    (setq org-clock-report-include-clocking-task t)
+
+    ;; Set state on clock-in/out
+    (setq org-clock-in-switch-to-state "IN_PROGRESS")
+    (setq org-clock-out-switch-to-state "TODO")
+    (setq org-clock-out-when-done t)
+
+    ;; Seems not to work right...
+    ;; (setq org-clock-persist t)
+    ;; (org-clock-persistence-insinuate)
+    )
 #+END_SRC
 
 ** Calender
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
-(with-eval-after-load 'org
-  (setq org-gcal-file-alist '(("broose33@gmail.com" . "~/Dropbox/org/gcal.org")))
-  (setq calendar-week-start-day 1)
-  (add-hook 'org-capture-after-finalize-hook 'google-calendar/sync-cal-after-capture)
-  (setq cfw:org-capture-template '("s" "Scedule an event" entry
-                                   (file "~/Dropbox/org/gcal.org")
-                                   "* %^{Description}\n%^{LOCATION}p\n%(cfw:org-capture-day)\n%?")))
+  (with-eval-after-load 'org
+    (setq org-gcal-client-id "322490078171-du9iqgmrrjdq1l5ca1fhodv2i9o02std.apps.googleusercontent.com" ;// no-commit
+          org-gcal-client-secret "yYx2zRLDBS8pqqRgrNukn5Ex") ;// no-commit
+    (setq org-gcal-file-alist '(("broose33@gmail.com" . "~/Dropbox/org/gcal.org")))
+    (setq calendar-week-start-day 1)
+    (add-hook 'org-capture-after-finalize-hook 'google-calendar/sync-cal-after-capture)
+    (setq cfw:org-capture-template '("s" "Scedule an event" entry
+                                     (file "~/Dropbox/org/gcal.org")
+                                     "* %^{Description}\n%^{LOCATION}p\n%(cfw:org-capture-day)\n%?")))
 #+END_SRC
 
 ** Capturing
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
   (with-eval-after-load 'org
-    (defun org-journal-find-location ()
-      ;; Open today's journal, but specify a non-nil prefix argument in order to
-      ;; inhibit inserting the heading; org-capture will insert the heading.
-      (org-journal-new-entry t)
-      (unless (eq org-journal-file-type 'daily)
-        (org-narrow-to-subtree))
-      (goto-char (point-max)))
+    (defun transform-square-brackets-to-round-ones(string-to-transform)
+      "Transforms [ into ( and ] into ), other chars left unchanged."
+      (concat
+       (mapcar #'(lambda (c) (if (equal c ?[) ?\( (if (equal c ?]) ?\) c))) string-to-transform))
+      )
 
-    (setq org-capture-templates
-          (quote
-           (("j" "Journal entry" plain (function org-journal-find-location)
-             "** %(format-time-string org-journal-time-format)%^{Title}\n%i%?"
-             :jump-to-captured t :immediate-finish t)
-           ("b" "Add book to read" entry
-            (file+headline "~/Dropbox/org/books.org" "Books to read")
-            (file "~/Dropbox/org/templates/tpl-book.txt") :empty-lines-after 2)
-           ("t" "Todo entry" entry
-            (file "~/Dropbox/org/inbox.org")
-            (file "~/Dropbox/org/templates/tpl-todo.txt"))
-           ("g" "Goal entry" entry
-            (file "~/Dropbox/org/goals.org")
-            (file "~/Dropbox/org/templates/tpl-goal.txt"))))))
-    #+END_SRC
+    (setq org-capture-templates '(
+                                  ("b" "Add book to read" entry (file+headline "~/Dropbox/org/books.org" "Books to read")
+                                   (file "~/Dropbox/org/templates/tpl-book.txt") :empty-lines-after 2)
+                                  ("t" "Todo entry" entry (file "~/Dropbox/org/inbox.org")
+                                   (file "~/Dropbox/org/templates/tpl-todo.txt"))
+                                  ("g" "Goal entry" entry (file "~/Dropbox/org/goals.org")
+                                   (file "~/Dropbox/org/templates/tpl-goal.txt"))
+                                  ("p" "Protocol" entry (file "~/Dropbox/org/inbox.org")
+                                   "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\nCaptured On: %U\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+                                  ("L" "Protocol Link" entry (file "~/Dropbox/org/inbox.org")
+                                   "* %? [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]] \nCaptured On: %U"))))
+#+END_SRC
 
-** Babel
+** Other/package
+*** org-babel
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
   (with-eval-after-load 'org
     (setq org-babel-load-languages
@@ -185,19 +203,53 @@
             (js . t)
             (emacs-lisp . t)
             (shell . t)
-            (dot . t))))
+            (dot . t)
+            (jupyter . t))))
 #+END_SRC
 
+*** org-roam
+#+BEGIN_SRC emacs-lisp :tangle user-config.el
+  (with-eval-after-load 'org
+    (setq org-roam-directory "~/Dropbox/org/zettelkasten")
+    (setq org-roam-db-location "~/Dropbox/org/zettelkasten/db/org-roam.db")
+    (add-hook 'org-mode-hook 'org-roam-mode))
+#+END_SRC
+
+*** org-edna
+#+BEGIN_SRC emacs-lisp :tangle user-config.el
+  (with-eval-after-load 'org
+    (org-edna-mode))
+#+END_SRC
+
+*** org-protocol
+#+BEGIN_SRC emacs-lisp :tangle user-config.el
+  (with-eval-after-load 'org
+    (require 'org-protocol)
+    (add-to-list 'org-modules 'org-protocol))
+#+END_SRC
+
+
+* Programming
+** General
+#+BEGIN_SRC emacs-lisp :tangle user-config.el
+  (setq coffee-tab-width 2) ; coffeescript
+  (setq javascript-indent-level 2) ; javascript-mode
+  (setq js-indent-level 2) ; js-mode
+  (setq js2-basic-offset 2) ; js2-mode, in latest js2-mode, it's alias of js-indent-level
+  (setq web-mode-markup-indent-offset 2) ; web-mode, html tag in html file
+  (setq web-mode-css-indent-offset 2) ; web-mode, css in html file
+  (setq web-mode-code-indent-offset 2) ; web-mode, js code in html file
+  (setq css-indent-offset 2) ; css-mode
+#+END_SRC
+** Python
+#+BEGIN_SRC emacs-lisp :tangle user-config.el
+(setenv "WORKON_HOME" "~/.pyenv/versions/miniconda3-latest/envs")
+(pyvenv-mode 1)
+#+END_SRC
 * Chinese
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
   (require 'pyim-basedict)
   (pyim-basedict-enable)
-#+END_SRC
-
-* Python
-#+BEGIN_SRC emacs-lisp :tangle user-config.el
-(setenv "WORKON_HOME" "~/.pyenv/versions/miniconda3-latest/envs")
-(pyvenv-mode 1)
 #+END_SRC
 
 * SSH

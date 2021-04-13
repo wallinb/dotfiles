@@ -30,7 +30,8 @@ values."
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '((shell :variables
+   '(nginx
+     (shell :variables
             shell-default-shell 'vterm)
      (shell-scripts :variables shell-scripts-backend 'lsp)
      rust
@@ -39,12 +40,13 @@ values."
      git
      javascript
      lsp
-     dap ;; new debugger for python layer
+     dap
      (python :variables
              python-backend 'lsp
              python-tab-width 4
              python-fill-column 99
-             python-formatter 'yapf
+             python-formatter 'black
+             python-test-runner 'pytest
              python-format-on-save t
              python-sort-imports-on-save t
              python-pipenv-activate t)
@@ -53,12 +55,14 @@ values."
      html
      docker
      markdown
+     bibtex
      helm
      auto-completion
      (org :variables
+          org-enable-roam-support t
           org-enable-org-journal-support t
           org-journal-dir "~/Dropbox/org/journal/"
-          org-journal-file-format "%Y-%m-%d.org")
+          org-journal-file-format "%Y-%m-%d.org")  ;; breaks if not by day...?
      google-calendar
      ;; spell-checking
      syntax-checking
@@ -69,7 +73,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(exec-path-from-shell)
+   dotspacemacs-additional-packages '(exec-path-from-shell org-super-agenda org-edna org-ql jupyter)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -142,6 +146,8 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(solarized-dark
+                         solarized-gruvbox-dark
+                         solarized-wombat-dark
                          doom-nord
                          spacemacs-dark
                          spacemacs-light
@@ -150,7 +156,7 @@ values."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    dotspacemacs-mode-line-theme 'spacemacs
-   ;; quickly tweak the mode-line size to make separators look not too crappy.
+   ;; Tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
                                :size 13
                                :weight normal
@@ -278,7 +284,7 @@ values."
    ;;                       text-mode
    ;;   :size-limit-kb 1000)
    ;; (default nil)
-   dotspacemacs-line-numbers nil
+   dotspacemacs-line-numbers t
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
@@ -309,7 +315,7 @@ values."
    ;; `trailing' to delete only the whitespace at end of lines, `changed'to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup nil
+   dotspacemacs-whitespace-cleanup 'trailing
    ))
 
 ;; Load configuration from org formatted config files in .spacemacs.d
@@ -342,16 +348,84 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default bold shadow italic underline bold bold-italic bold])
+ '(beacon-color "#cc6666")
+ '(compilation-message-face 'default)
+ '(cua-global-mark-cursor-color "#689d6a")
+ '(cua-overwrite-cursor-color "#d79921")
+ '(cua-read-only-cursor-color "#98971a")
+ '(evil-want-Y-yank-to-eol nil)
+ '(flycheck-color-mode-line-face-to-color 'mode-line-buffer-id)
+ '(frame-background-mode 'dark)
+ '(highlight-changes-colors '("#FD5FF0" "#AE81FF"))
  '(highlight-parentheses-colors '("#2aa198" "#b58900" "#268bd2" "#6c71c4" "#859900"))
+ '(highlight-symbol-colors
+   '("#522b41fa2b3b" "#3822432737ec" "#5bbf348b2bf5" "#483e36c83def" "#43c0418329b9" "#538f3624267a" "#317a3ddc3e5e"))
+ '(highlight-symbol-foreground-color "#bdae93")
+ '(highlight-tail-colors
+   '(("#3C3D37" . 0)
+     ("#679A01" . 20)
+     ("#4BBEAE" . 30)
+     ("#1DB4D0" . 50)
+     ("#9A8F21" . 60)
+     ("#A75B00" . 70)
+     ("#F309DF" . 85)
+     ("#3C3D37" . 100)))
+ '(hl-bg-colors
+   '("#a76e00" "#a53600" "#b21b0a" "#9f4d64" "#8b2a58" "#14676b" "#2e7d33" "#747400"))
+ '(hl-fg-colors
+   '("#282828" "#282828" "#282828" "#282828" "#282828" "#282828" "#282828" "#282828"))
+ '(hl-todo-keyword-faces
+   '(("TODO" . "#dc752f")
+     ("NEXT" . "#dc752f")
+     ("THEM" . "#2d9574")
+     ("PROG" . "#4f97d7")
+     ("OKAY" . "#4f97d7")
+     ("DONT" . "#f2241f")
+     ("FAIL" . "#f2241f")
+     ("DONE" . "#86dc2f")
+     ("NOTE" . "#b1951d")
+     ("KLUDGE" . "#b1951d")
+     ("HACK" . "#b1951d")
+     ("TEMP" . "#b1951d")
+     ("FIXME" . "#dc752f")
+     ("XXX+" . "#dc752f")
+     ("\\?\\?\\?+" . "#dc752f")))
+ '(lsp-ui-doc-border "#bdae93")
+ '(magit-diff-use-overlays nil)
+ '(nrepl-message-colors
+   '("#fb4933" "#d65d0e" "#d79921" "#747400" "#b9b340" "#14676b" "#689d6a" "#d3869b" "#b16286"))
+ '(org-download-screenshot-method "scrot -s %s")
  '(org-modules
    '(ol-bbdb ol-bibtex ol-docview ol-eww ol-gnus org-habit ol-info ol-irc ol-mhe ol-rmail ol-w3m))
  '(package-selected-packages
-   '(insert-shebang flycheck-bashate fish-mode company-shell xterm-color vterm terminal-here shell-pop multi-term eshell-z eshell-prompt-extras esh-help toml-mode ron-mode racer flycheck-rust cargo rust-mode yaml-mode origami dockerfile-mode docker tablist docker-tramp lsp-mode cfrs posframe org-journal pyim pyim-basedict xr pangu-spacing find-by-pinyin-dired chinese-conv ace-pinyin pinyinlib web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc coffee-mode d-mode company-dcd ivy flycheck-dmd-dub web-mode tagedit slim-mode scss-mode sass-mode pug-mode helm-css-scss haml-mode flycheck-pos-tip pos-tip flycheck emmet-mode company-web web-completion-data smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download magit-gitflow magit-popup htmlize helm-gitignore gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link flyspell-correct-helm flyspell-correct evil-magit magit git-commit with-editor transient auto-dictionary yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional helm-pydoc cython-mode anaconda-mode pythonic mmm-mode markdown-toc markdown-mode gh-md spinner evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state iedit evil-exchange evil-ediff evil-args evil-anzu anzu evil undo-tree adaptive-wrap ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smartparens restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra lv hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile projectile pkg-info epl helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-unimpaired evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-escape goto-chg eval-sexp-fu elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
+   '(org-ref pdf-tools key-chord helm-bibtex bibtex-completion biblio parsebib biblio-core jupyter zmq nginx-mode ein polymode anaphora websocket org-ql peg ov map org-roam emacsql-sqlite3 org-edna org-super-agenda ts insert-shebang flycheck-bashate fish-mode company-shell xterm-color vterm terminal-here shell-pop multi-term eshell-z eshell-prompt-extras esh-help toml-mode ron-mode racer flycheck-rust cargo rust-mode yaml-mode origami dockerfile-mode docker tablist docker-tramp lsp-mode cfrs posframe org-journal pyim pyim-basedict xr pangu-spacing find-by-pinyin-dired chinese-conv ace-pinyin pinyinlib web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc coffee-mode d-mode company-dcd ivy flycheck-dmd-dub web-mode tagedit slim-mode scss-mode sass-mode pug-mode helm-css-scss haml-mode flycheck-pos-tip pos-tip flycheck emmet-mode company-web web-completion-data smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download magit-gitflow magit-popup htmlize helm-gitignore gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link flyspell-correct-helm flyspell-correct evil-magit magit git-commit with-editor transient auto-dictionary yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional helm-pydoc cython-mode anaconda-mode pythonic mmm-mode markdown-toc markdown-mode gh-md spinner evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state iedit evil-exchange evil-ediff evil-args evil-anzu anzu evil undo-tree adaptive-wrap ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smartparens restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra lv hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile projectile pkg-info epl helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-unimpaired evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-escape goto-chg eval-sexp-fu elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))
+ '(pos-tip-background-color "#FFFACE")
+ '(pos-tip-foreground-color "#272822")
+ '(smartrep-mode-line-active-bg (solarized-color-blend "#98971a" "#32302f" 0.2))
+ '(term-default-bg-color "#282828")
+ '(term-default-fg-color "#a89984")
+ '(vc-annotate-background-mode nil)
+ '(weechat-color-list
+   '(unspecified "#272822" "#3C3D37" "#F70057" "#F92672" "#86C30D" "#A6E22E" "#BEB244" "#E6DB74" "#40CAE4" "#66D9EF" "#FB35EA" "#FD5FF0" "#74DBCD" "#A1EFE4" "#F8F8F2" "#F8F8F0"))
+ '(when
+      (or
+       (not
+        (boundp 'ansi-term-color-vector))
+       (not
+        (facep
+         (aref ansi-term-color-vector 0)))))
+ '(window-divider-mode nil)
+ '(xterm-color-names
+   ["#32302f" "#fb4933" "#98971a" "#d79921" "#458588" "#d3869b" "#689d6a" "#a89984"])
+ '(xterm-color-names-bright
+   ["#282828" "#d65d0e" "#7c6f64" "#282828" "#a89984" "#b16286" "#bdae93" "#fbf1c7"]))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((((class color) (min-colors 89)) (:foreground "#839496" :background "#002b36"))))
+ '(default ((t (:background nil))))
  '(window-divider ((t (:foreground "dark cyan")))))
 )

@@ -39,3 +39,4 @@ message/rfc822=userapp-Thunderbird.desktop;
 application/pdf=epdfview.desktop;
 application/x-bittorrent=deluge.desktop;
 application/x-zip-compressed=nvim.desktop;
+application/zip=xarchiver.desktop;
