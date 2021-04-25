@@ -20,6 +20,7 @@
   (setq show-paren-style 'expression)
 #+END_SRC
 
+
 * Org
 ** Locations
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
@@ -257,4 +258,15 @@
 (require 'exec-path-from-shell)
 (exec-path-from-shell-copy-env "SSH_AGENT_PID")
 (exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
+#+END_SRC
+
+* Misc
+Avoid odd interaction with evil mode and incomplete searches. See: https://emacs.stackexchange.com/questions/35946/strange-behaviour-on-evil-delete/48282#48282
+#+BEGIN_SRC emacs-lisp :tangle user-config.el
+(defun stop-using-minibuffer ()
+    "kill the minibuffer"
+    (when (and (>= (recursion-depth) 1) (active-minibuffer-window))
+      (abort-recursive-edit)))
+
+(add-hook 'mouse-leave-buffer-hook 'stop-using-minibuffer)
 #+END_SRC
