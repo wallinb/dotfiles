@@ -75,9 +75,9 @@
     (setq org-todo-keyword-faces
           '(("TODO" . "dodger blue") ("IN_PROGRESS" . "tomato") ("REPEAT" . "turquoise") ("WAITING" . "slate blue") ("CANCELED" . "dim gray") ("DONE" . "forest green")))
 
-    ;; Turn off dependency enforcement (seems to cause crashes frequently)
-    (setq org-enforce-todo-dependencies nil)
-    (setq org-enforce-todo-checkbox-dependencies nil)
+    ;; Dependency enforcement
+    (setq org-enforce-todo-dependencies t)
+    (setq org-enforce-todo-checkbox-dependencies t)
 
     ;; When hitting alt-return on a header, please create a new one without
     ;; messing up the one I'm standing on.
@@ -97,6 +97,9 @@
     ;; Log reschedules to drawer
     (setq org-log-reschedule (quote time))
     (setq org-log-done nil))
+
+    ;; Strike through done items
+    (set-face-attribute 'org-headline-done nil :strike-through t)
 #+END_SRC
 
 ** Agenda

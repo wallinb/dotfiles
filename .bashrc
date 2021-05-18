@@ -45,7 +45,7 @@ eval "$(pyenv virtualenv-init -)"
 # eval "$(rbenv init -)"
 
 # Set default browser
-BROWSER=/usr/bin/firefox-developer-edition
+BROWSER=/usr/bin/firefox
 
 # Set up Node Version Manager
 source /usr/share/nvm/init-nvm.sh
