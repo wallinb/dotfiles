@@ -19,8 +19,6 @@
   (setq show-paren-mode t)
   (setq show-paren-style 'expression)
 #+END_SRC
-
-
 * Org
 ** Locations
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
@@ -55,7 +53,6 @@
           '((nil :maxlevel . 3)
             (org-agenda-files :maxlevel . 1))))
 #+END_SRC
-
 ** General
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
   (with-eval-after-load 'org
@@ -138,7 +135,10 @@
             (:name "Work" :category "work" :order 1)
             (:name "Habits" :habit t :order 10)
             (:auto-category t :order 2)
-            )))
+            ))
+    ;; Fix for issue with key mapping interaction. See: https://github.com/alphapapa/org-super-agenda/issues/50
+    (setq org-super-agenda-header-map (make-sparse-keymap))
+    )
 #+END_SRC
 
 
@@ -231,8 +231,6 @@
     (require 'org-protocol)
     (add-to-list 'org-modules 'org-protocol))
 #+END_SRC
-
-
 * Programming
 ** General
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
@@ -255,14 +253,12 @@
   (require 'pyim-basedict)
   (pyim-basedict-enable)
 #+END_SRC
-
 * SSH
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
 (require 'exec-path-from-shell)
 (exec-path-from-shell-copy-env "SSH_AGENT_PID")
 (exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
 #+END_SRC
-
 * Misc
 Avoid odd interaction with evil mode and incomplete searches. See: https://emacs.stackexchange.com/questions/35946/strange-behaviour-on-evil-delete/48282#48282
 #+BEGIN_SRC emacs-lisp :tangle user-config.el

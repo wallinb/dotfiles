@@ -43,6 +43,9 @@ eval "$(pyenv virtualenv-init -)"
 # For rbenv
 # PATH="$HOME/.rbenv/bin:$PATH"
 # eval "$(rbenv init -)"
+PATH="${HOME}/.emacs.d/bin:$PATH"
+
+# For emacs/doom
 
 # Set default browser
 BROWSER=/usr/bin/firefox
