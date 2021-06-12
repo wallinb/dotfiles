@@ -132,7 +132,8 @@
             (:name "Today"          ; Optionally specify section name
                    :time-grid t     ; Items that appear on the time grid
                    :order 0)
-            (:name "Work" :category "work" :order 1)
+            (:name "Top Priority" :priority>= "B" :order 1)
+            (:name "Work" :category "work" :order 2)
             (:name "Habits" :habit t :order 10)
             (:auto-category t :order 2)
             ))
