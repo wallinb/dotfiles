@@ -205,6 +205,7 @@
   (with-eval-after-load 'org
     (setq org-babel-load-languages
           '((python . t)
+            (clojure . t)
             (js . t)
             (emacs-lisp . t)
             (shell . t)
@@ -248,6 +249,11 @@
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
 (setenv "WORKON_HOME" "~/.pyenv/versions/miniconda3-latest/envs")
 (pyvenv-mode 1)
+#+END_SRC
+** Clojure
+#+BEGIN_SRC emacs-lisp :tangle user-config.el
+    (require 'ob-clojure)
+    (setq org-babel-clojure-backend 'cider)
 #+END_SRC
 * Chinese
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
