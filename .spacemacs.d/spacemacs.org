@@ -95,6 +95,9 @@
     (setq org-log-reschedule (quote time))
     (setq org-log-done nil))
 
+    ;; Don't instert blank before headings
+    (setcdr (assoc 'heading org-blank-before-new-entry) nil)
+
     ;; Strike through done items
     (set-face-attribute 'org-headline-done nil :strike-through t)
 #+END_SRC
