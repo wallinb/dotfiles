@@ -248,6 +248,10 @@
   (setq web-mode-code-indent-offset 2) ; web-mode, js code in html file
   (setq css-indent-offset 2) ; css-mode
 #+END_SRC
+** LSP
+#+BEGIN_SRC emacs-lisp :tangle user-config.el
+
+#+END_SRC
 ** Python
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
 (setenv "WORKON_HOME" "~/.pyenv/versions/miniconda3-latest/envs")
@@ -255,8 +259,8 @@
 #+END_SRC
 ** Clojure
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
-    (require 'ob-clojure)
-    (setq org-babel-clojure-backend 'cider)
+  (require 'ob-clojure)
+  (setq org-babel-clojure-backend 'cider)
 #+END_SRC
 * Chinese
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
