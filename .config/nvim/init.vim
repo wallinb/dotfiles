@@ -109,8 +109,8 @@ map <left> <nop>
 map <right> <nop>
 
 " Swap ; and :  Convenient.
-nnoremap ; :
-nnoremap : ;
+" nnoremap ; :
+" nnoremap : ;
 
 " remap jj to escape in insert mode
 inoremap jj <Esc>

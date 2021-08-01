@@ -219,6 +219,7 @@
 *** org-roam
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
   (with-eval-after-load 'org
+    (setq org-roam-v2-ack t)
     (setq org-roam-directory "~/Dropbox/org/zettelkasten")
     (setq org-roam-db-location "~/Dropbox/org/zettelkasten/db/org-roam.db")
     (add-hook 'org-mode-hook 'org-roam-mode))
