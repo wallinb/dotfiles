@@ -212,19 +212,20 @@
             (js . t)
             (emacs-lisp . t)
             (shell . t)
-            (dot . t)
-            (jupyter . t))))
+            (dot . t))))
 #+END_SRC
 
 *** org-roam
-#+BEGIN_SRC emacs-lisp :tangle user-config.el
-  (with-eval-after-load 'org
-    (setq org-roam-v2-ack t)
-    (setq org-roam-directory "~/Dropbox/org/zettelkasten")
-    (setq org-roam-db-location "~/Dropbox/org/zettelkasten/db/org-roam.db")
-    (add-hook 'org-mode-hook 'org-roam-mode))
+#+BEGIN_SRC emacs-lisp :tangle user-init.el
+(setq org-roam-v2-ack t)
 #+END_SRC
 
+#+BEGIN_SRC emacs-lisp :tangle user-config.el
+  (setq org-roam-v2-ack t)
+  (with-eval-after-load 'org
+    (setq org-roam-directory "~/Dropbox/org/zettelkasten")
+    (setq org-roam-db-location "~/Dropbox/org/zettelkasten/db/org-roam.db"))
+#+END_SRC
 *** org-edna
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
   (with-eval-after-load 'org
