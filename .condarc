@@ -1,5 +1,5 @@
 channels:
+  - https://swgconda.wx.spire.com
   - conda-forge
-  - nsidc
-  - defaults
+  - nodefaults
 channel_priority: strict

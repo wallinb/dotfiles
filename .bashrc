@@ -2,7 +2,11 @@
 . ~/.bash_aliases
 
 # Setup terminal
-TERMINAL=termite
+
+if command -v termite &> /dev/null
+then
+    TERMINAL=termite
+fi
 TERM=xterm-256color
 PS1="\[\e[0;32m\]\H\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;32m\]\[\e[m\] \[\e[1;37m\] \n$ "
 
@@ -15,8 +19,6 @@ set -o vi
 HISTCONTROL=ignoredups:erasedups
 # append history entries
 shopt -s histappend
-# After each command, save and reload history
-PROMPT_COMMAND="history -n; history -w; history -c; history -r; $PROMPT_COMMAND"
 
 # FZF
 # https://github.com/junegunn/fzf
@@ -26,26 +28,20 @@ PROMPT_COMMAND="history -n; history -w; history -c; history -r; $PROMPT_COMMAND"
 NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
 
-# Go executables
-PATH="$HOME/go/bin:$PATH"
-
 # User executables
 PATH="$HOME/bin:$PATH"
 
 # # For pyenv
 PYENV_ROOT="$HOME/.pyenv"
 PATH="$PYENV_ROOT/bin:$PATH"
-if command -v pyenv 1>/dev/null 2>&1; then
-    eval "$(pyenv init -)"
-fi
+eval "$(pyenv init --path)"
+eval "$(pyenv init -)"
+# For auto activation of environements
 eval "$(pyenv virtualenv-init -)"
 
 # For rbenv
 # PATH="$HOME/.rbenv/bin:$PATH"
 # eval "$(rbenv init -)"
-PATH="${HOME}/.emacs.d/bin:$PATH"
-
-# For emacs/doom
 
 # Set default browser
 BROWSER=/usr/bin/firefox
@@ -53,20 +49,9 @@ BROWSER=/usr/bin/firefox
 # Set up Node Version Manager
 source /usr/share/nvm/init-nvm.sh
 
-# Completion
-source ~/bin/tmuxinator.bash
-
 # Use bash-completion, if available
 [[ $PS1 && -f /usr/share/bash-completion/bash_completion ]] && \
     . /usr/share/bash-completion/bash_completion
-
-# Setup/connect to single ssh agent
-if ! pgrep -u "$USER" ssh-agent > /dev/null; then
-    ssh-agent > ~/.ssh-agent-thing
-fi
-if [[ ! "$SSH_AUTH_SOCK" ]]; then
-    eval "$(<~/.ssh-agent-thing)"
-fi
 
 # For ibus
 export GTK_IM_MODULE=ibus
@@ -75,3 +60,26 @@ export QT_IM_MODULE=xim
 export XMODIFIERS=@im=ibus
 export GIT_INTERNAL_GETTEXT_TEST_FALLBACKS=1 # fixes emacs gettext issue
 ibus-daemon -drx
+
+# SSH Agent
+SSH_ENV="$HOME/.ssh/agent-environment"
+
+function start_agent {
+    echo "Initialising new SSH agent..."
+    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+    echo succeeded
+    chmod 600 "${SSH_ENV}"
+    . "${SSH_ENV}" > /dev/null
+}
+
+# Source SSH settings, if applicable
+
+if [ -f "${SSH_ENV}" ]; then
+    . "${SSH_ENV}" > /dev/null
+    #ps ${SSH_AGENT_PID} doesn't work under cywgin
+    ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+        start_agent;
+    }
+else
+    start_agent;
+fi

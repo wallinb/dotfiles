@@ -238,6 +238,11 @@
     (require 'org-protocol)
     (add-to-list 'org-modules 'org-protocol))
 #+END_SRC
+*** org-journal
+#+BEGIN_SRC emacs-lisp :tangle user-config.el
+  (with-eval-after-load 'org
+    (setq org-journal-carryover-items "TODO=\"TODO\"|TODO=\"IN_PROGRESS\"|TODO=\"WAITING\""))
+#+END_SRC
 * Programming
 ** General
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
@@ -256,8 +261,9 @@
 #+END_SRC
 ** Python
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
-(setenv "WORKON_HOME" "~/.pyenv/versions/miniconda3-latest/envs")
-(pyvenv-mode 1)
+  (setenv "WORKON_HOME" "~/.pyenv/versions/miniconda3-latest/envs")
+  (pyvenv-mode 1)
+  (setq blacken-line-length 132)
 #+END_SRC
 ** Clojure
 #+BEGIN_SRC emacs-lisp :tangle user-config.el

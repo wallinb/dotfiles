@@ -306,7 +306,7 @@ exec --no-startup-id "emacsclient -c ~/Dropbox/org -a=''"
 exec --no-startup-id dropbox
 exec --no-startup-id firefox
 exec --no-startup-id slack --disable-gpu
-exec --no-startup-id keepassxc
+# exec --no-startup-id keepassxc
 exec --no-startup-id spotify --disable-gpu
 exec --no-startup-id termite -e 'tmuxinator main' --class='Termite-Main'
 exec --no-startup-id /home/wallinb/bin/input.sh
