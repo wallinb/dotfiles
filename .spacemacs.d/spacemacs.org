@@ -269,6 +269,8 @@
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
   (require 'ob-clojure)
   (setq org-babel-clojure-backend 'cider)
+  (setq clojure-align-forms-automatically nil)
+  (setq clojure-indent-style 'align-arguments)
 #+END_SRC
 * Chinese
 #+BEGIN_SRC emacs-lisp :tangle user-config.el

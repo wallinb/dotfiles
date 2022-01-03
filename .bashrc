@@ -31,18 +31,6 @@ NVM_DIR="$HOME/.nvm"
 # User executables
 PATH="$HOME/bin:$PATH"
 
-# # For pyenv
-PYENV_ROOT="$HOME/.pyenv"
-PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init --path)"
-eval "$(pyenv init -)"
-# For auto activation of environements
-eval "$(pyenv virtualenv-init -)"
-
-# For rbenv
-# PATH="$HOME/.rbenv/bin:$PATH"
-# eval "$(rbenv init -)"
-
 # Set default browser
 BROWSER=/usr/bin/firefox
 
@@ -83,3 +71,8 @@ if [ -f "${SSH_ENV}" ]; then
 else
     start_agent;
 fi
+
+# # For pyenv
+eval "$(pyenv init -)"
+# For auto activation of environements
+eval "$(pyenv virtualenv-init -)"
