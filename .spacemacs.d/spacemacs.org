@@ -18,6 +18,9 @@
   ;; Prevent paren madness
   (setq show-paren-mode t)
   (setq show-paren-style 'expression)
+
+  ;; Always have final newline (posix standard)
+  (setq require-final-newline t)
 #+END_SRC
 * Org
 ** Locations
@@ -25,28 +28,11 @@
   (with-eval-after-load 'org
     ;; Set dir/file defaults
     (setq org-directory "~/Dropbox/org")
+    (setq org-agenda-files (list org-directory))
     (setq org-default-notes-file (concat org-directory "/inbox.org"))
     (setq-default dotspacemacs-configuration-layers
                   '((org :variables org-projectile-file "TODOs.org")))
-
-    ;; Collect all .org from my Org directory and subdirs
     (setq org-agenda-file-regexp "\\`[^.].*\\.org\\'") ; default value
-    (defun load-org-agenda-files-recursively (dir) "Find all directories in DIR."
-           (unless (file-directory-p dir) (error "Not a directory `%s'" dir))
-           (unless (equal (directory-files dir nil org-agenda-file-regexp t) nil)
-             (add-to-list 'org-agenda-files dir)
-             )
-           (dolist (file (directory-files dir nil nil t))
-             (unless (member file '("." ".."))
-               (let ((file (concat dir file "/")))
-                 (when (file-directory-p file)
-                   (load-org-agenda-files-recursively file)
-                   )
-                 )
-               )
-             )
-           )
-    (load-org-agenda-files-recursively org-directory) ; trailing slash required
 
     ;; Enable org-refile accross files
     (setq org-refile-targets
@@ -73,7 +59,7 @@
           '(("TODO" . "dodger blue") ("IN_PROGRESS" . "tomato") ("REPEAT" . "turquoise") ("WAITING" . "slate blue") ("CANCELED" . "dim gray") ("DONE" . "forest green")))
 
     ;; Dependency enforcement
-    (setq org-enforce-todo-dependencies t)
+    (setq org-enforce-todo-dependencies nil)
     (setq org-enforce-todo-checkbox-dependencies t)
 
     ;; When hitting alt-return on a header, please create a new one without
@@ -88,23 +74,51 @@
     ;; Attachments are inherited
     (setq org-attach-use-inheritance t)
 
-    ;; Log and clock into respectie drawers
+    ;; Log and clock into respective drawers
     (setq org-log-into-drawer t)
 
     ;; Log reschedules to drawer
     (setq org-log-reschedule (quote time))
-    (setq org-log-done nil))
+    (setq org-log-done nil)
 
     ;; Don't instert blank before headings
     (setcdr (assoc 'heading org-blank-before-new-entry) nil)
 
     ;; Strike through done items
     (set-face-attribute 'org-headline-done nil :strike-through t)
-#+END_SRC
 
+    ;; Default priority is low
+    (setq org-priority-lowest 68)
+    (setq org-priority-highest 65)
+    (setq org-priority-default 68)
+
+    (setq org-tag-alist (quote ((:startgroup)
+                                ("@errand" . ?e)
+                                ("@office" . ?o)
+                                ("@home" . ?h)
+                                (:endgroup)
+                                ("WORK" . ?w)
+                                ("PROJECT" . ?p)
+                                ("NOTE" . ?n))))
+    )
+#+END_SRC
+** Keybinds
+#+BEGIN_SRC emacs-lisp :tangle user-config.el
+  (with-eval-after-load 'org
+    (spacemacs/set-leader-keys-for-major-mode 'org-mode "oCs" 'bh/punch-in)
+    (spacemacs/set-leader-keys-for-major-mode 'org-mode "oCx" 'bh/punch-out)
+    (spacemacs/set-leader-keys-for-major-mode 'org-mode "oCv" 'org-columns)
+    )
+#+END_SRC
 ** Agenda
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
   (with-eval-after-load 'org
+    ;; Overwrite the current window with the agenda
+    (setq org-agenda-window-setup 'current-window)
+
+    ;; Default to day view
+    (setq org-agenda-span 'day)
+
     ;; Set agenda view formatting
     (setq org-agenda-breadcrumbs-separator "/")
     (setq org-agenda-prefix-format '((agenda . " %i %-12:c%?-12t% s %b")
@@ -135,17 +149,17 @@
             (:name "Today"          ; Optionally specify section name
                    :time-grid t     ; Items that appear on the time grid
                    :order 0)
-            (:name "Top Priority" :priority>= "B" :order 1)
+            (:name "Top Priority" :priority>= "C" :order 1)
             (:name "Work" :category "work" :order 2)
             (:name "Habits" :habit t :order 10)
             (:auto-category t :order 2)
             ))
     ;; Fix for issue with key mapping interaction. See: https://github.com/alphapapa/org-super-agenda/issues/50
     (setq org-super-agenda-header-map (make-sparse-keymap))
+    (setq org-stuck-projects
+          '("+PROJECT/-DONE" ("NEXT" ) ))
     )
 #+END_SRC
-
-
 ** Clock
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
   (with-eval-after-load 'org
@@ -155,31 +169,103 @@
     (setq org-clock-total-time-cell-format "%s")
     (setq org-duration-format 'h:mm)
     (setq org-clock-report-include-clocking-task t)
+    (setq org-clock-out-remove-zero-time-clocks t)
 
     ;; Set state on clock-in/out
     (setq org-clock-in-switch-to-state "IN_PROGRESS")
     (setq org-clock-out-switch-to-state "TODO")
     (setq org-clock-out-when-done t)
 
-    ;; Seems not to work right...
-    ;; (setq org-clock-persist t)
-    ;; (org-clock-persistence-insinuate)
+    (setq org-clock-persist 'history)
+    (org-clock-persistence-insinuate)
+
+    (setq bh/keep-clock-running nil)
+
+    (defun bh/find-project-task ()
+      "Move point to the parent (project) task if any"
+      (save-restriction
+        (widen)
+        (let ((parent-task (save-excursion (org-back-to-heading 'invisible-ok) (point))))
+          (while (org-up-heading-safe)
+            (when (member (nth 2 (org-heading-components)) org-todo-keywords-1)
+              (setq parent-task (point))))
+          (goto-char parent-task)
+          parent-task)))
+
+    (defun bh/punch-in (arg)
+      "Start continuous clocking and set the default task to the
+  selected task.  If no task is selected set the Organization task
+  as the default task."
+      (interactive "p")
+      (setq bh/keep-clock-running t)
+      (if (equal major-mode 'org-agenda-mode)
+          ;;
+          ;; We're in the agenda
+          ;;
+          (let* ((marker (org-get-at-bol 'org-hd-marker))
+                 (tags (org-with-point-at marker (org-get-tags-at))))
+            (if (and (eq arg 4) tags)
+                (org-agenda-clock-in '(16))
+              (bh/clock-in-organization-task-as-default)))
+        ;;
+        ;; We are not in the agenda
+        ;;
+        (save-restriction
+          (widen)
+                                          ; Find the tags on the current task
+          (if (and (equal major-mode 'org-mode) (not (org-before-first-heading-p)) (eq arg 4))
+              (org-clock-in '(16))
+            (bh/clock-in-organization-task-as-default)))))
+
+    (defun bh/punch-out ()
+      (interactive)
+      (setq bh/keep-clock-running nil)
+      (when (org-clock-is-active)
+        (org-clock-out))
+      (org-agenda-remove-restriction-lock))
+
+    (defun bh/clock-in-default-task ()
+      (save-excursion
+        (org-with-point-at org-clock-default-task
+          (org-clock-in))))
+
+    (defun bh/clock-in-parent-task ()
+      "Move point to the parent (project) task if any and clock in"
+      (let ((parent-task))
+        (save-excursion
+          (save-restriction
+            (widen)
+            (while (and (not parent-task) (org-up-heading-safe))
+              (when (member (nth 2 (org-heading-components)) org-todo-keywords-1)
+                (setq parent-task (point))))
+            (if parent-task
+                (org-with-point-at parent-task
+                  (org-clock-in))
+              (when bh/keep-clock-running
+                (bh/clock-in-default-task)))))))
+
+    (defvar bh/organization-task-id "498085c5-4f62-4774-b09c-4d7ba8bb5d3a")
+
+    (defun bh/clock-in-organization-task-as-default ()
+      (interactive)
+      (org-with-point-at (org-id-find bh/organization-task-id 'marker)
+        (org-clock-in '(16))))
+
+    (defun bh/clock-out-maybe ()
+      (when (and bh/keep-clock-running
+                 (not org-clock-clocking-in)
+                 (marker-buffer org-clock-default-task)
+                 (not org-clock-resolving-clocks-due-to-idleness))
+        (bh/clock-in-parent-task)))
+
+    (add-hook 'org-clock-out-hook 'bh/clock-out-maybe 'append)
+
+    ; Set default column view headings: Task Effort Clock_Summary
+    (setq org-columns-default-format "%80ITEM(Task) %10Effort(Effort){:} %10CLOCKSUM")
+    (setq org-global-properties (quote (("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
+                                    ("STYLE_ALL" . "habit"))))
     )
 #+END_SRC
-
-** Calender
-#+BEGIN_SRC emacs-lisp :tangle user-config.el
-  (with-eval-after-load 'org
-    (setq org-gcal-client-id "322490078171-du9iqgmrrjdq1l5ca1fhodv2i9o02std.apps.googleusercontent.com" ;// no-commit
-          org-gcal-client-secret "yYx2zRLDBS8pqqRgrNukn5Ex") ;// no-commit
-    (setq org-gcal-file-alist '(("broose33@gmail.com" . "~/Dropbox/org/gcal.org")))
-    (setq calendar-week-start-day 1)
-    (add-hook 'org-capture-after-finalize-hook 'google-calendar/sync-cal-after-capture)
-    (setq cfw:org-capture-template '("s" "Scedule an event" entry
-                                     (file "~/Dropbox/org/gcal.org")
-                                     "* %^{Description}\n%^{LOCATION}p\n%(cfw:org-capture-day)\n%?")))
-#+END_SRC
-
 ** Capturing
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
   (with-eval-after-load 'org
@@ -189,19 +275,26 @@
        (mapcar #'(lambda (c) (if (equal c ?[) ?\( (if (equal c ?]) ?\) c))) string-to-transform))
       )
 
-    (setq org-capture-templates '(
-                                  ("b" "Add book to read" entry (file+headline "~/Dropbox/org/books.org" "Books to read")
-                                   (file "~/Dropbox/org/templates/tpl-book.txt") :empty-lines-after 2)
-                                  ("t" "Todo entry" entry (file "~/Dropbox/org/inbox.org")
+    (defun org-journal-find-location ()
+      ;; Open today's journal, but specify a non-nil prefix argument in order to
+      ;; inhibit inserting the heading; org-capture will insert the heading.
+      (org-journal-new-entry t)
+      (unless (eq org-journal-file-type 'daily)
+        (org-narrow-to-subtree))
+      (goto-char (point-max)))
+
+    (setq org-capture-templates '(("t" "Todo" entry (file "~/Dropbox/org/inbox.org")
                                    (file "~/Dropbox/org/templates/tpl-todo.txt"))
-                                  ("g" "Goal entry" entry (file "~/Dropbox/org/goals.org")
-                                   (file "~/Dropbox/org/templates/tpl-goal.txt"))
+                                  ("n" "Note" entry (file "~/Dropbox/org/inbox.org")
+                                   "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
+                                  ("j" "Journal entry" plain (function org-journal-find-location)
+                                   "** %(format-time-string org-journal-time-format)%^{Title}\n%i%?"
+                                   :jump-to-captured t :immediate-finish t)
                                   ("p" "Protocol" entry (file "~/Dropbox/org/inbox.org")
                                    "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\nCaptured On: %U\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
                                   ("L" "Protocol Link" entry (file "~/Dropbox/org/inbox.org")
                                    "* %? [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]] \nCaptured On: %U"))))
 #+END_SRC
-
 ** Other/package
 *** org-babel
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
@@ -241,7 +334,9 @@
 *** org-journal
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
   (with-eval-after-load 'org
-    (setq org-journal-carryover-items "TODO=\"TODO\"|TODO=\"IN_PROGRESS\"|TODO=\"WAITING\""))
+    (setq org-journal-enable-agenda-integration f)
+    (setq org-journal-file-header (concat "#+TITLE: Weekly Journal\n"
+                                          "#+STARTUP: overview\n")))
 #+END_SRC
 * Programming
 ** General
