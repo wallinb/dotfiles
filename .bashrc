@@ -2,17 +2,12 @@
 . ~/.bash_aliases
 
 # Setup terminal
-
-if command -v termite &> /dev/null
-then
-    TERMINAL=termite
-fi
-TERM=xterm-256color
+TERM=xterm-24bit
 PS1="\[\e[0;32m\]\H\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;32m\]\[\e[m\] \[\e[1;37m\] \n$ "
 
 # Editor
-VISUAL=nvim
-EDITOR=nvim
+VISUAL=vim
+EDITOR=vim
 set -o vi
 
 # avoid duplicates in history
@@ -34,12 +29,7 @@ PATH="$HOME/bin:$PATH"
 # Set default browser
 BROWSER=/usr/bin/firefox
 
-# Set up Node Version Manager
-source /usr/share/nvm/init-nvm.sh
-
-# Use bash-completion, if available
-[[ $PS1 && -f /usr/share/bash-completion/bash_completion ]] && \
-    . /usr/share/bash-completion/bash_completion
+PATH="${HOME}/.emacs.d/bin:$PATH"
 
 # For ibus
 export GTK_IM_MODULE=ibus
@@ -49,30 +39,31 @@ export XMODIFIERS=@im=ibus
 export GIT_INTERNAL_GETTEXT_TEST_FALLBACKS=1 # fixes emacs gettext issue
 ibus-daemon -drx
 
-# SSH Agent
-SSH_ENV="$HOME/.ssh/agent-environment"
-
-function start_agent {
-    echo "Initialising new SSH agent..."
-    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
-    echo succeeded
-    chmod 600 "${SSH_ENV}"
-    . "${SSH_ENV}" > /dev/null
-}
-
-# Source SSH settings, if applicable
-
-if [ -f "${SSH_ENV}" ]; then
-    . "${SSH_ENV}" > /dev/null
-    #ps ${SSH_AGENT_PID} doesn't work under cywgin
-    ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
-        start_agent;
-    }
-else
-    start_agent;
+# Setup/connect to single ssh agent
+if ! pgrep -u "$USER" ssh-agent > /dev/null; then
+    ssh-agent > ~/.ssh-agent
+fi
+if [[ ! "$SSH_AUTH_SOCK" ]]; then
+    eval "$(<~/.ssh-agent)"
 fi
 
 # # For pyenv
 eval "$(pyenv init -)"
 # For auto activation of environements
 eval "$(pyenv virtualenv-init -)"
+
+# NVM
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# Set lang
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US.UTF-8
+
+# Automatically added by the Guix install script.
+if [ -n "$GUIX_ENVIRONMENT" ]; then
+    if [[ $PS1 =~ (.*)"\\$" ]]; then
+        PS1="${BASH_REMATCH[1]} [env]\\\$ "
+    fi
+fi
+

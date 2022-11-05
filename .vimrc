@@ -86,6 +86,60 @@ set diffopt+=vertical
 set mmp=5000
 
 " ##############################################################################
+" Plugins
+" ##############################################################################
+
+call plug#begin()
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-scriptease'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-vinegar'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+" Plug 'junegunn/gv.vim'
+" Plug 'mhinz/vim-signify'
+" Plug 'idanarye/vim-merginal'
+" Plug 'sodapopcan/vim-twiggy'
+" Plug 'w0rp/ale'
+" Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+" Plug 'svermeulen/vim-easyclip'
+" Plug 'jpalardy/vim-slime'
+" Plug 'mileszs/ack.vim'
+" Plug 'hynek/vim-python-pep8-indent'
+" Plug 'pangloss/vim-javascript'
+" Plug 'mxw/vim-jsx'
+" Plug 'davidhalter/jedi-vim'
+" Plug 'christoomey/vim-tmux-navigator'
+" Plug 'walkermatt/vim-mapfile'
+" Plug 'rodjek/vim-puppet'
+" Plug 'godlygeek/tabular'
+" Plug 'tell-k/vim-autopep8'
+" Plug 'vim-scripts/paredit.vim'
+" Plug 'SirVer/ultisnips'
+" Plug 'honza/vim-snippets'
+" Plug 'vim-scripts/Solarized'
+" Plug 'leafgarland/typescript-vim'
+" Plug 'Rykka/riv.vim'
+" Plug 'Rykka/InstantRst'
+" Plug 'vim-pandoc/vim-pandoc'
+" Plug 'vim-pandoc/vim-pandoc-syntax'
+" Plug 'arcticicestudio/nord-vim', { 'branch': 'develop' }
+" Plug 'vim-scripts/diffchar.vim'
+" Plug 'jeffkreeftmeijer/vim-numbertoggle'
+" Plug 'ryanoasis/vim-devicons'
+" Plug 'mhinz/vim-startify'
+" Plug 'itchyny/lightline.vim'
+" Plug 'ambv/black'
+" Plug 'fisadev/vim-isort'
+" Plug 'szymonmaszke/vimpyter'
+" Plug 'neilagabriel/vim-geeknote'
+" Plug 'fmoralesc/vim-tutor-mode'
+" Plug 'fmoralesc/vim-pad'
+" Plug 'wallinb/notational-fzf-vim'
+
+call plug#end()
+
+" ##############################################################################
 " Key binds
 " ##############################################################################
 
@@ -128,98 +182,8 @@ vnoremap <silent> # :<C-U>
 
 nnoremap <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
 
-nnoremap <F6> :NV<CR>
-
 nnoremap <F7> "=strftime("%c")<CR>P
 inoremap <F7> <C-R>=strftime("%c")<CR>
-
-" ##############################################################################
-" Plugins
-" ##############################################################################
-
-call plug#begin('~/.vim/plugged')
-Plug 'tpope/vim-fugitive'
-" Plug 'tpope/vim-scriptease'
-Plug 'junegunn/gv.vim'
-Plug 'mhinz/vim-signify'
-Plug 'idanarye/vim-merginal'
-Plug 'sodapopcan/vim-twiggy'
-Plug 'w0rp/ale'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-vinegar'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-repeat'
-Plug 'svermeulen/vim-easyclip'
-Plug 'jpalardy/vim-slime'
-Plug 'mileszs/ack.vim'
-Plug 'hynek/vim-python-pep8-indent'
-Plug 'pangloss/vim-javascript'
-Plug 'mxw/vim-jsx'
-" Plug 'davidhalter/jedi-vim'
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'walkermatt/vim-mapfile'
-Plug 'rodjek/vim-puppet'
-Plug 'godlygeek/tabular'
-Plug 'tell-k/vim-autopep8'
-Plug 'vim-scripts/paredit.vim'
-Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
-Plug 'vim-scripts/Solarized'
-Plug 'leafgarland/typescript-vim'
-Plug 'Rykka/riv.vim'
-Plug 'Rykka/InstantRst'
-Plug 'vim-pandoc/vim-pandoc'
-Plug 'vim-pandoc/vim-pandoc-syntax'
-Plug 'arcticicestudio/nord-vim', { 'branch': 'develop' }
-Plug 'vim-scripts/diffchar.vim'
-Plug 'jeffkreeftmeijer/vim-numbertoggle'
-Plug 'ryanoasis/vim-devicons'
-Plug 'mhinz/vim-startify'
-Plug 'itchyny/lightline.vim'
-Plug 'ambv/black'
-Plug 'fisadev/vim-isort'
-Plug 'szymonmaszke/vimpyter'
-" Plug 'neilagabriel/vim-geeknote'
-" Plug 'fmoralesc/vim-tutor-mode'
-" Plug 'fmoralesc/vim-pad'
-" Plug 'wallinb/notational-fzf-vim'
-
-call plug#end()
-
-let g:slime_target="tmux"
-let g:slime_python_ipython = 1
-
-let g:tex_flavor='latex'
-
-let g:jsx_ext_required=0
-
-nnoremap <F2> :FZF<CR>
-nnoremap <F3> :Gstatus<CR>
-nnoremap <F4> :Twiggy<CR>
-
-let notes={ 'Name': 'Notes', 'path': '~/drive/notes',}
-let g:riv_projects=[notes]
-
-let g:EasyClipUseSubstituteDefaults=1
-nmap M <Plug>MoveMotionEndOfLinePlug
-
-let g:ackprg = 'ag --nogroup --nocolor --column'
-
-autocmd Filetype ipynb nnoremap <Leader>b :VimpyterInsertPythonBlock<CR>
-autocmd Filetype ipynb nnoremap <Leader>j :VimpyterStartJupyter<CR>
-autocmd Filetype ipynb nnoremap <Leader>n :VimpyterStartNteract<CR>
-
-nnoremap <leader>, :ALENext<CR>
-
-let g:black_skip_string_normalization = 1
-
-let g:nv_search_paths = ['~/notes', './notes']
-let g:nv_local_dir = './notes'
-let g:nv_create_note_key = 'ctrl-x'
-let g:nv_create_local_note_key = 'ctrl-n'
-
-let g:vim_isort_python_version = 'python3'
 
 " ##############################################################################
 " Filetype
@@ -241,13 +205,9 @@ set foldlevel=99
 hi Folded ctermfg=250
 hi Folded ctermbg=236
 
-let g:nord_uniform_diff_background=1
-colorscheme nord
-
 " Statusline
 set laststatus=2
 set statusline=\ %F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ Col:\ %c
-set statusline+=\ %{fugitive#statusline()}
 set statusline+=\ %#warningmsg#
 set statusline+=\ %*
 
@@ -344,9 +304,3 @@ autocmd FileType html,htmldjango,xml,javascript,yaml,css setlocal shiftwidth=2 t
 
 " When vimrc is edited, reload it
 autocmd! bufwritepost .vimrc source %
-
-" Run Black when writing python code
-autocmd BufWritePre *.py execute ':Black'
-
-" Run isort when writing python code
-autocmd BufWritePre *.py execute ':Isort'
