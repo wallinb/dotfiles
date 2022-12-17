@@ -1,5 +1,5 @@
-#+title: Emacs Configuration
-#+description: Configuration org-file which gets tangled to generate user-config.el
+#+title: Spacemacs Configuration
+#+description: Configuration org-file which gets tangled to generate user-config.el and user-init.el
 #+startup: overview
 
 * General
@@ -26,11 +26,12 @@
 ** 0 - General
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
   (with-eval-after-load 'org
-    (setq org-directory "~/Dropbox/org/zettelkasten/")
+    (setq org-directory (file-name-as-directory "~/Dropbox/org"))
+    (setq org-agenda-files (list (concat org-directory "projects")))
     (setq org-agenda-file-regexp "\\`[^.].*\\.org\\'")
 
     ;; Autosave org files regularly
-    ; (add-hook 'auto-save-hook 'org-save-all-org-buffers)
+                                          ; (add-hook 'auto-save-hook 'org-save-all-org-buffers)
 
     ;; Not sure -- set 't' to change status in org-todo list?
     (setq org-use-fast-todo-selection t)
@@ -79,6 +80,14 @@
     (setq org-priority-highest 65)
     (setq org-priority-default 68)
 
+    ;; Refile to any sub-heading
+    (setq org-refile-targets '((nil :maxlevel . 9)
+                               (org-agenda-files :maxlevel . 9)))
+    ;; Refile in a single go
+    (setq org-outline-path-complete-in-steps nil)
+    ;; Show full paths for refiling
+    (setq org-refile-use-outline-path t)
+
     (setq org-tag-alist (quote ((:startgroup)
                                 ("@errand" . ?e)
                                 ("@office" . ?o)
@@ -86,30 +95,7 @@
                                 (:endgroup)
                                 ("WORK" . ?w)
                                 ("PROJECT" . ?p)
-                                ("NOTE" . ?n))))
-    (defun my/org-roam-copy-todo-to-today ()
-      (interactive)
-      (let ((org-refile-keep t) ;; Set this to nil to delete the original!
-            (org-roam-dailies-capture-templates
-              '(("t" "tasks" entry "%?"
-                :if-new (file+head+olp "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n" ("Tasks")))))
-            (org-after-refile-insert-hook #'save-buffer)
-            today-file
-            pos)
-        (save-window-excursion
-          (org-roam-dailies--capture (current-time) t)
-          (setq today-file (buffer-file-name))
-          (setq pos (point)))
-
-        ;; Only refile if the target file is different than the current file
-        (unless (equal (file-truename today-file)
-                      (file-truename (buffer-file-name)))
-          (org-refile nil nil (list "Tasks" today-file nil pos)))))
-
-    (add-to-list 'org-after-todo-state-change-hook
-                (lambda ()
-                  (when (equal org-state "DONE")
-                    (my/org-roam-copy-todo-to-today)))))
+                                ("NOTE" . ?n)))))
 #+END_SRC
 ** Agenda
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
@@ -179,8 +165,7 @@
   (defun transform-square-brackets-to-round-ones(string-to-transform)
     "Transforms [ into ( and ] into ), other chars left unchanged."
     (concat
-      (mapcar #'(lambda (c) (if (equal c ?[) ?\( (if (equal c ?]) ?\) c))) string-to-transform))
-    )
+      (mapcar #'(lambda (c) (if (equal c ?[) ?\( (if (equal c ?]) ?\) c))) string-to-transform)))
 
   (setq org-capture-templates '(("t" "Todo" entry (file (concat org-directory "/inbox.org"))
                                   (file (concat org-directory "/templates/tpl-todo.txt")))
@@ -299,8 +284,6 @@ as the default task."
 ** Keybinds
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
 (with-eval-after-load 'org
-  (spacemacs/set-leader-keys-for-major-mode 'org-mode "oc" 'org-roam-capture)
-  (spacemacs/set-leader-keys-for-major-mode 'org-mode "oj" 'org-roam-dailies-capture-today)
   (spacemacs/set-leader-keys-for-major-mode 'org-mode "or" 'org-roam-refile)
   (spacemacs/set-leader-keys-for-major-mode 'org-mode "os" 'bh/punch-in)
   (spacemacs/set-leader-keys-for-major-mode 'org-mode "ox" 'bh/punch-out)
@@ -342,41 +325,17 @@ as the default task."
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
   (with-eval-after-load 'org
     (setq org-roam-completion-everywhere t)
-    (setq org-roam-directory org-directory)
-    (setq org-roam-db-location (concat org-directory "db/org-roam.db"))
-
-    ;; Use org-roam files for todos
-    (defun my/org-roam-filter-by-tag (tag-name)
-      (lambda (node)
-        (member tag-name (org-roam-node-tags node))))
-
-    (defun my/org-roam-list-notes-by-tag (tag-name)
-      (delq nil (delete-dups (mapcar #'org-roam-node-file
-                                     (seq-filter
-                                      (my/org-roam-filter-by-tag tag-name)
-                                      (org-roam-node-list))))))
-
-    (defun my/org-roam-refresh-agenda-list ()
-      (interactive)
-      (setq org-agenda-files (my/org-roam-list-notes-by-tag "project")))
-
-    ;; Build the agenda list the first time for the session
-    (my/org-roam-refresh-agenda-list)
-
-    (setq org-roam-capture-templates '(("d" "default" plain
-                                        "%?"
-                                        :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+TITLE: ${title}\n#+STARTUP: overview")
-                                        :unnarrowed t)
-                                       ("p" "project" plain
-                                        "* Goals\n\n%?\n\n* Notes\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
-                                        :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+TITLE: ${title}\n#+CATEGORY: Project\n#+FILETAGS: project\n#+STARTUP: overview")
-                                        :unnarrowed t))))
-
-  (setq org-roam-dailies-capture-templates
-      '(("d" "default" entry
-         "* %<%H:%M> %?"
-         :target (file+head "%<%Y-%m-%d>.org"
-                            "#+TITLE: %<%Y-%m-%d>\n"))))
+    (setq org-roam-directory (concat org-directory "notes"))
+    (setq org-roam-db-location (concat org-directory "db/org-roam.db")))
+#+END_SRC
+*** org-journal
+#+BEGIN_SRC emacs-lisp :tangle user-config.el
+  (with-eval-after-load 'org
+    (setq org-journal-date-format "%A %Y-%m-%d")
+    (setq org-journal-dir (concat org-directory "journal"))
+    (setq org-journal-file-format "%Y-%m")
+    (setq org-journal-file-header "#+TITLE: Monthly Journal\n#+STARTUP: folded\n")
+    (setq org-journal-file-type 'monthly))
 #+END_SRC
 * Programming
 ** Clojure

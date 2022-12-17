@@ -1,68 +1,25 @@
-/* #if __has_include(.extend.Xresources) */
-/* #include .extend.Xresources */
-/* #endif */
+! [[file:projects/dotfiles-v2/Desktop.org::*Colors in Xresources][Colors in Xresources:2]]
+*color0: #292d3e
+*color1: #f07178
+*color2: #c3e88d
+*color3: #ffcb6b
+*color4: #82aaff
+*color5: #c792ea
+*color6: #89ddff
+*color7: #d0d0d0
+*color8: #434758
+*color9: #ff8b92
+*color10: #ddffa7
+*color11: #ffe585
+*color12: #9cc4ff
+*color13: #e1acff
+*color14: #a3f7ff
+*color15: #ffffff
 
-! ^ The above lines are no comments!
-! Leave them as they are if a file ~/.extend.Xresources is being used on your system.
-! config can be added there or also here below.
-! For comments use !
+*background: #292d3e
+*foreground: #d0d0d0
+! Colors in Xresources:2 ends here
 
+! [[file:projects/dotfiles-v2/Desktop.org::*Fonts][Fonts:2]]
 Xft.dpi: 96
-Xft.antialias: true
-Xft.hinting: true
-Xft.rgba: rgb
-Xft.autohint: false
-Xft.hintstyle: hintslight
-Xft.lcdfilter: lcddefault
-
-/* ! +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-/* ! title      Nord XResources                                    + */
-/* ! project    nord-xresources                                    + */
-/* ! version    0.1.0                                              + */
-/* ! repository https://github.com/arcticicestudio/nord-xresources + */
-/* ! author     Arctic Ice Studio                                  + */
-/* ! email      development@arcticicestudio.com                    + */
-/* ! copyright  Copyright (C) 2016                                 + */
-/* ! +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-/* #define nord0 #2E3440 */
-/* #define nord1 #3B4252 */
-/* #define nord2 #434C5E */
-/* #define nord3 #4C566A */
-/* #define nord4 #D8DEE9 */
-/* #define nord5 #E5E9F0 */
-/* #define nord6 #ECEFF4 */
-/* #define nord7 #8FBCBB */
-/* #define nord8 #88C0D0 */
-/* #define nord9 #81A1C1 */
-/* #define nord10 #5E81AC */
-/* #define nord11 #BF616A */
-/* #define nord12 #D08770 */
-/* #define nord13 #EBCB8B */
-/* #define nord14 #A3BE8C */
-/* #define nord15 #B48EAD */
-
-/* *.foreground:   nord4 */
-/* *.background:   nord0 */
-/* *.cursorColor:  nord4 */
-/* *fading: 35 */
-/* *fadeColor: nord3 */
-
-/* *.color0: nord1 */
-/* *.color1: nord11 */
-/* *.color2: nord14 */
-/* *.color3: nord13 */
-/* *.color4: nord9 */
-/* *.color5: nord15 */
-/* *.color6: nord8 */
-/* *.color7: nord5 */
-/* *.color8: nord3 */
-/* *.color9: nord11 */
-/* *.color10: nord14 */
-/* *.color11: nord13 */
-/* *.color12: nord9 */
-/* *.color13: nord15 */
-/* *.color14: nord7 */
-/* *.color15: nord6 */
-
-URxvt.font:                       xft:Source Code Pro:Regular:size14
-XTerm*selectToClipboard:          true
+! Fonts:2 ends here
