@@ -29,7 +29,7 @@ NVM_DIR="$HOME/.nvm"
 PATH="$HOME/bin:$PATH"
 
 # Set default browser
-BROWSER=/usr/bin/firefox
+BROWSER=/snap/bin/firefox
 
 PATH="${HOME}/.emacs.d/bin:$PATH"
 
@@ -50,6 +50,8 @@ if [[ ! "$SSH_AUTH_SOCK" ]]; then
 fi
 
 # # For pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 # For auto activation of environements
 eval "$(pyenv virtualenv-init -)"

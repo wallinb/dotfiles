@@ -179,7 +179,7 @@ Plug 'christoomey/vim-tmux-navigator'
 " Plug 'Rykka/InstantRst'
 " Plug 'vim-pandoc/vim-pandoc'
 " Plug 'vim-pandoc/vim-pandoc-syntax'
-Plug 'arcticicestudio/nord-vim', { 'branch': 'develop' }
+Plug 'arcticicestudio/nord-vim'
 " Plug 'vim-scripts/diffchar.vim'
 " Plug 'jeffkreeftmeijer/vim-numbertoggle'
 " Plug 'ryanoasis/vim-devicons'
@@ -213,28 +213,12 @@ nmap M <Plug>MoveMotionEndOfLinePlug
 
 let g:ackprg = 'ag --nogroup --nocolor --column'
 
-" nnoremap <leader>, :ALENext<CR>
-
 let g:vim_isort_python_version = 'python3'
 
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
-
-" Use K to show documentation in preview window
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-let g:mkdx#settings = { 'highlight': { 'enable': 1 },
-                    \ 'enter': { 'enable': 1 , 'shift': 1 },
-                    \ 'links': { 'external': { 'enable': 1 } },
-                    \ 'toc': { 'text': 'Table of Contents', 'update_on_write': 1 },
-                    \ 'fold': { 'enable': 1 } }
-
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
-
-map <F6> :NERDTreeToggle<CR>
 
 " ##############################################################################
 " Filetype
