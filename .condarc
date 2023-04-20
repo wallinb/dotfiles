@@ -1,5 +1,4 @@
 channels:
-  - https://swgconda.wxops.spire.com
   - conda-forge
   - nodefaults
 channel_priority: strict

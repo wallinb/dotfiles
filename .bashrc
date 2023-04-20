@@ -2,8 +2,9 @@
 . ~/.bash_aliases
 
 # Setup terminal
-TERM=xterm-24bit
+TERM=xterm
 PS1="\[\e[0;32m\]\H\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;32m\]\[\e[m\] \[\e[1;37m\] \n$ "
+export TERMINAL=/usr/bin/kitty
 
 # Editor
 VISUAL=vim
@@ -69,21 +70,3 @@ if [ -n "$GUIX_ENVIRONMENT" ]; then
 fi
 
 eval "$(starship init bash)"
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/wallinb/.pyenv/versions/miniconda3-latest/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/home/wallinb/.pyenv/versions/miniconda3-latest/etc/profile.d/conda.sh" ]; then
-        . "/home/wallinb/.pyenv/versions/miniconda3-latest/etc/profile.d/conda.sh"
-    else
-        export PATH="/home/wallinb/.pyenv/versions/miniconda3-latest/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-
-# Kedro autocomplete
-eval "$(_KEDRO_COMPLETE=source kedro)"
