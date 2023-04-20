@@ -4,15 +4,18 @@
 
 * General
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
-  ;; wrap line by default
-  (global-visual-line-mode 1)
-  (auto-save-visited-mode 1)
+  ;; Wrap line by default
+  (global-visual-line-mode t)
+
+  ;; Auto save directly to file and auto load changes
+  (auto-save-visited-mode t)
+  (global-auto-revert-mode t)
 
   ;; Familiar zooming with Ctrl+ and Ctrl-
   (define-key global-map (kbd "C-+") 'text-scale-increase)
   (define-key global-map (kbd "C--") 'text-scale-decrease)
 
-  ;; This combination makes splitting horizontally more likely...don't ask me how
+  ;; This combination generally forces splitting into columns
   (setq split-width-threshold 1)
   (setq split-height-threshold nil)
 

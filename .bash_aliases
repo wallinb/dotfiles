@@ -27,7 +27,7 @@ alias gbc='git branch --merged | grep -v "\*" | xargs -n 1 git branch -d'
 alias lsbin='echo $PATH | xargs -d: -i find {} -executable -type f'
 
 # Manage homedir config files
-alias dotfiles="/usr/bin/git --git-dir=$HOME/.dotfiles/.git/ --work-tree=$HOME"
+alias dotfiles="/usr/bin/git --git-dir=$HOME/Sync/dotfiles.git/ --work-tree=$HOME"
 
 # Fix for using xterm-24bit locally when not available remotely
 alias ssh="TERM=xterm-256color ssh"
