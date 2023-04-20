@@ -151,13 +151,13 @@ bindsym $mod+Ctrl+Left workspace prev
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
-set $ws1 "1:terminal"
-set $ws2 "2:web"
-set $ws3 "3:games"
-set $ws4 "4:chat"
+set $ws1 "1:emacs"
+set $ws2 "2:terminal"
+set $ws3 "3:web"
+set $ws4 "4:slack"
 set $ws5 "5:keys"
 set $ws6 "6:audio"
-set $ws7 "7"
+set $ws7 "7:games"
 set $ws8 "8"
 set $ws9 "9"
 
@@ -196,10 +196,12 @@ bindsym $mod+Shift+9 move container to workspace $ws9; workspace $ws9
 
 # Open applications on specific workspaces
 assign [class="(?i)Emacs"] $ws1
-assign [instance="Navigator"] $ws2
-assign [class="(?i)qpwgraph"] $ws6
-assign [class="(?i)KeePassXC"] $ws5
-assign [class="(?i)kitty"] $ws7
+assign [class="(?i)kitty"] $ws2
+assign [instance="Navigator"] $ws3
+assign [class="(?i)slack"] $ws4
+assign [class="(?i)keepassxc"] $ws5
+assign [class="(?i)steam"] $ws6
+assign [class="(?i)qpwgraph"] $ws7
 
 # Open specific applications in floating mode
 for_window [title="alsamixer"] floating enable border pixel 1
