@@ -36,7 +36,7 @@
     (setq org-agenda-file-regexp "\\`[^.].*\\.org\\'")
 
     ;; Autosave org files regularly
-    ;; (add-hook 'auto-save-hook 'org-save-all-org-buffers)
+    (add-hook 'auto-save-hook 'org-save-all-org-buffers)
 
     ;; Not sure -- set 't' to change status in org-todo list?
     (setq org-use-fast-todo-selection t)

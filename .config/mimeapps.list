@@ -1,17 +1,9 @@
-# [[file:../projects/dotfiles-v2/Desktop.org::*MIME][MIME:1]]
-[Default Applications]
-text/html=firefox.desktop
-x-scheme-handler/http=firefox.desktop
-x-scheme-handler/https=firefox.desktop
-x-scheme-handler/about=firefox.desktop
-x-scheme-handler/unknown=firefox.desktop
-x-scheme-handler/tg=userapp-Telegram Desktop-7PVWF1.desktop
-image/png=feh.desktop
-image/jpg=feh.desktop
-image/jpeg=feh.desktop
-application/pdf=org.pwmt.zathura.desktop
-
 [Added Associations]
-x-scheme-handler/tg=userapp-Telegram Desktop-7PVWF1.desktop;
-application/pdf=org.pwmt.zathura.desktop
-# MIME:1 ends here
+image/png=gimp.desktop;
+
+[Default Applications]
+text/html=firefox_firefox.desktop
+x-scheme-handler/http=firefox_firefox.desktop
+x-scheme-handler/https=firefox_firefox.desktop
+x-scheme-handler/about=firefox_firefox.desktop
+x-scheme-handler/unknown=firefox_firefox.desktop
