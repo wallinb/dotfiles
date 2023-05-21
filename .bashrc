@@ -11,6 +11,9 @@ VISUAL=vim
 EDITOR=vim
 set -o vi
 
+# Browser
+BROWSER=firefox
+
 # avoid duplicates in history
 HISTCONTROL=ignoredups:erasedups
 HISTTIMEFORMAT="%F %T "

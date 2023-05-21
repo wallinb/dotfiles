@@ -30,7 +30,7 @@
 ** 0 - General
 #+BEGIN_SRC emacs-lisp :tangle user-config.el
   (with-eval-after-load 'org
-    (setq org-directory (file-name-as-directory "~/Dropbox/org"))
+    (setq org-directory (file-name-as-directory "~/Sync/org"))
     (setq inbox-file (concat org-directory "projects/inbox.org"))
     (setq org-agenda-files (list (concat org-directory "projects")))
     (setq org-agenda-file-regexp "\\`[^.].*\\.org\\'")
@@ -183,7 +183,7 @@
                                     "* TODO %^{Description}\n%?")
                                   ("n" "Note" entry (file inbox-file)
                                     "* %? :NOTE:\n" :clock-in t :clock-resume t)
-                                  ("c" "Cookbook" entry (file+headline "~/Dropbox/org/projects/cooking.org" "Recipes")
+                                  ("c" "Cookbook" entry (file+headline "~/Sync/org/projects/cooking.org" "Recipes")
                                     "%(org-chef-get-recipe-from-url)"
                                     :empty-lines 1)
                                   ("m" "Manual Cookbook" entry (file+headline (concat org-directory "projects/cooking.org") "Recipes")
